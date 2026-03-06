@@ -15,7 +15,7 @@ export async function getDrivers(sessionKey?: number | string): Promise<Driver[]
   }
 
   try {
-    const response = await fetch(url.toString(), { next: { revalidate: 3600 } });
+    const response = await fetch(url.toString(), { next: { revalidate: 60 } });
     if (!response.ok) throw new Error('Failed to fetch drivers from OpenF1');
 
     const data = await response.json();
