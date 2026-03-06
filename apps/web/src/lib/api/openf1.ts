@@ -6,6 +6,8 @@ const OPENF1_BASE_URL = 'https://api.openf1.org/v1';
 // Rate limit: Max 5 concurrent requests to OpenF1 to avoid 429 errors
 const limit = pLimit(5);
 
+const sleep = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
 /**
  * Helper to determine revalidation time based on session status.
  * If sessions are active/near, revalidate faster.
@@ -29,6 +31,7 @@ function getRevalidateTime(sessions?: any[]): number {
  */
 export async function getDrivers(sessionKey?: number | string): Promise<Driver[]> {
   return limit(async () => {
+    await sleep(200); // Wait 200ms to be extra safe with the API
     const url = new URL(`${OPENF1_BASE_URL}/drivers`);
     if (sessionKey) {
       url.searchParams.append('session_key', sessionKey.toString());
@@ -65,6 +68,7 @@ export async function getDrivers(sessionKey?: number | string): Promise<Driver[]
  */
 export async function getSessions(year: number = 2026): Promise<Session[]> {
   return limit(async () => {
+    await sleep(200); // Wait 200ms to be extra safe with the API
     const url = `${OPENF1_BASE_URL}/sessions?year=${year}`;
 
     try {
