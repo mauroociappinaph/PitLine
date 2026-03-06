@@ -4,9 +4,9 @@ import { ResultsTable } from '@/components/results/ResultsTable';
 export default async function ResultsPage({ params }: { params: Promise<{ sessionKey: string }> }) {
   const { sessionKey } = await params;
 
-  // Parallel fetch for speed
+  // Parallel fetch for speed - use backend API for results
   const [sessionResults, sessionDrivers, allDrivers, allSessions] = await Promise.all([
-    getResults(sessionKey),
+    fetch(`http://localhost:3001/results/${sessionKey}`).then((res: Response) => res.json()),
     getDrivers(sessionKey),
     getDrivers(), // All latest drivers as fallback
     getSessions(2026),
@@ -40,17 +40,27 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
   const uniqueDrivers = Array.from(new Map(driversPool.map(d => [d.driverNumber, d])).values());
 
   // Join results with driver details
-  const enrichedResults = sessionResults.map(res => {
-    const driver = uniqueDrivers.find(d => d.driverNumber === res.driverNumber);
-    return {
-      ...res,
-      driverName: driver ? `${driver.firstName} ${driver.lastName}` : `Driver ${res.driverNumber}`,
-      teamName: driver?.teamName,
-      teamColor: driver?.teamColor,
-      fastestLapTime: null,
-      lapsCompleted: 0,
-    };
-  });
+  const enrichedResults = sessionResults.map(
+    (res: {
+      driverNumber: number;
+      position: number;
+      fastestLapTime?: string | null;
+      lapsCompleted?: number;
+    }) => {
+      const driver = uniqueDrivers.find(d => d.driverNumber === res.driverNumber);
+      return {
+        driverNumber: res.driverNumber,
+        position: res.position,
+        fastestLapTime: res.fastestLapTime || null,
+        lapsCompleted: res.lapsCompleted || 0,
+        driverName: driver
+          ? `${driver.firstName} ${driver.lastName}`
+          : `Driver ${res.driverNumber}`,
+        teamName: driver?.teamName,
+        teamColor: driver?.teamColor,
+      };
+    }
+  );
 
   return (
     <div className="flex flex-col gap-16 pb-20 px-6 max-w-7xl mx-auto f1-grid-bg">

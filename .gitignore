@@ -65,3 +65,4 @@ playwright/.cache/
 # TypeScript
 *.tsbuildinfo
 next-env.d.ts
+\n# Git Worktrees\n.worktrees/
