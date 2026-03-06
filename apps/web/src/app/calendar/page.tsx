@@ -120,6 +120,29 @@ export default async function CalendarPage() {
     {} as Record<string, Session[]>
   );
 
+  // Create a list of all events (Real GPs + Placeholders)
+  const allEvents = EXPECTED_2026_GPS.map(gp => {
+    const matchedLocation = Object.keys(gpMap).find(loc =>
+      gp.locationMatch.some(match => loc.toLowerCase().includes(match.toLowerCase()))
+    );
+    const sessionsForGp = matchedLocation ? gpMap[matchedLocation] : [];
+
+    // Determine the earliest date for sorting
+    const earliestDate = sessionsForGp.length > 0 ? new Date(sessionsForGp[0].dateStart) : null;
+
+    return {
+      gp,
+      sessions: sessionsForGp,
+      matchedLocation,
+      earliestDate,
+    };
+  });
+
+  // Sort events: Real ones by date, then placeholders (keeping their relative order)
+  // Actually, since we want a chronological calendar, we should probably have
+  // approximate dates for placeholders too, but for now we'll prioritize real data
+  // and then follow the EXPECTED_2026_GPS order.
+
   return (
     <div className="flex flex-col gap-8 py-12 px-6 max-w-7xl mx-auto">
       <header className="flex flex-col gap-2">
@@ -135,13 +158,7 @@ export default async function CalendarPage() {
       </header>
 
       <div className="flex flex-col gap-12">
-        {EXPECTED_2026_GPS.map(gp => {
-          // Find sessions that match any of the location keywords
-          const matchedLocation = Object.keys(gpMap).find(loc =>
-            gp.locationMatch.some(match => loc.toLowerCase().includes(match.toLowerCase()))
-          );
-
-          const sessionsForGp = matchedLocation ? gpMap[matchedLocation] : [];
+        {allEvents.map(({ gp, sessions: sessionsForGp, matchedLocation }) => {
           const hasData = sessionsForGp.length > 0;
 
           if (hasData) {
