@@ -21,6 +21,7 @@ model Session {
 
   laps              Lap[]
   carData           CarData[]
+  positions         Position[]
 
   @@index([year])
   @@index([sessionKey])
@@ -41,6 +42,7 @@ model Driver {
 
   laps            Lap[]
   carData         CarData[]
+  positions       Position[]
 
   @@unique([sessionKey, driverNumber])
   @@index([sessionKey])
@@ -87,5 +89,20 @@ model CarData {
   driver        Driver   @relation(fields: [sessionKey, driverNumber], references: [sessionKey, driverNumber])
 
   @@index([sessionKey, driverNumber])
+  @@index([date])
+}
+
+model Position {
+  id            String   @id @default(cuid())
+  sessionKey    Int
+  driverNumber  Int
+  date          DateTime
+  position      Int
+
+  session       Session  @relation(fields: [sessionKey], references: [sessionKey])
+  driver        Driver   @relation(fields: [sessionKey, driverNumber], references: [sessionKey, driverNumber])
+
+  @@index([sessionKey])
+  @@index([driverNumber])
   @@index([date])
 }

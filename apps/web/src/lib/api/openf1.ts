@@ -104,3 +104,38 @@ export async function getSessions(year: number = 2026): Promise<Session[]> {
     }
   });
 }
+
+/**
+ * Fetch results for a specific session.
+ */
+export async function getResults(sessionKey: number | string) {
+  return limit(async () => {
+    await sleep(200);
+    const url = `${OPENF1_BASE_URL}/position?session_key=${sessionKey}`;
+
+    try {
+      const response = await fetch(url, { next: { revalidate: 60 } });
+      if (!response.ok) throw new Error('Failed to fetch positions');
+      const positions = await response.json();
+
+      // Latest position per driver
+      const latest = new Map();
+      positions.forEach((p: any) => {
+        const current = latest.get(p.driver_number);
+        if (!current || new Date(p.date) > new Date(current.date)) {
+          latest.set(p.driver_number, p);
+        }
+      });
+
+      return Array.from(latest.values())
+        .map(p => ({
+          driverNumber: p.driver_number,
+          position: p.position,
+        }))
+        .sort((a, b) => a.position - b.position);
+    } catch (error) {
+      console.error('Results API Error:', error);
+      return [];
+    }
+  });
+}
