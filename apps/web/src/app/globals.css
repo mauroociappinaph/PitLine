@@ -1,17 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #0A0A0F;
-  --foreground: #FFFFFF;
-  --surface: #1A1A24;
-  --surface-elevated: #252532;
-  --border: #333344;
-  --text-secondary: #A0A0B0;
-  --text-muted: #6B6B7B;
-  --primary: #1E40AF;
-  --secondary: #3B82F6;
-  --cta: #F59E0B;
+  --background: #000000;
+  --foreground: #ffffff;
+  --surface: #0a0a0b;
+  --surface-elevated: #161618;
+  --primary: #00f2ff; /* Cyan glowing */
+  --secondary: #ff007a; /* Magenta accent */
+  --cta: #00f2ff;
+  --border: rgba(255, 255, 255, 0.08);
 }
 
 @theme inline {
@@ -24,35 +22,96 @@
   --color-secondary: var(--secondary);
   --color-cta: var(--cta);
 
-  --font-sans: 'Fira Sans', system-ui, sans-serif;
+  --font-sans: 'Inter', 'Outfit', system-ui, sans-serif;
   --font-mono: 'Fira Code', monospace;
+  --font-f1: 'Outfit', sans-serif;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: var(--font-sans);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    -webkit-font-smoothing: antialiased;
+    background-image:
+      radial-gradient(circle at 50% -20%, rgba(0, 242, 255, 0.08) 0%, transparent 70%),
+      radial-gradient(circle at 0% 100%, rgba(255, 0, 122, 0.05) 0%, transparent 40%);
+    background-attachment: fixed;
+    min-height: 100vh;
+  }
 }
 
-.text-secondary { color: var(--text-secondary); }
-.text-muted { color: var(--text-muted); }
+@layer components {
+  .glass-card {
+    background: rgba(10, 10, 11, 0.7);
+    backdrop-filter: blur(12px) saturate(180%);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  }
 
-.card-f1 {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 1.5rem;
-  transition: all 150ms ease;
+  .glass-card:hover {
+    background: rgba(16, 16, 18, 0.8);
+    border-color: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(0, 242, 255, 0.5);
+  }
+
+  .text-glow-white {
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
+  }
+
+  .live-indicator {
+    width: 8px;
+    height: 8px;
+    background-color: #ff3e3e;
+    border-radius: 50%;
+    box-shadow: 0 0 12px #ff3e3e;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.4; transform: scale(1.3); }
+    100% { opacity: 1; transform: scale(1); }
+  }
+
+  .f1-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+    width: 100%;
+  }
+
+  .btn-premium {
+    @apply px-6 py-2 rounded-full font-bold uppercase tracking-widest text-[10px] transition-all;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    color: black;
+    box-shadow: 0 4px 15px rgba(0, 242, 255, 0.2);
+  }
+
+  .btn-premium:hover {
+    filter: brightness(1.1);
+    transform: scale(1.05);
+    box-shadow: 0 6px 20px rgba(0, 242, 255, 0.4);
+  }
 }
 
-.card-f1:hover {
-  background: var(--surface-elevated);
-  transform: translateY(-2px);
-  border-color: var(--text-muted);
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
 }
 
-.glow-rb { box-shadow: 0 0 20px rgba(54, 113, 198, 0.3); }
-.glow-mclaren { box-shadow: 0 0 20px rgba(255, 128, 0, 0.3); }
-.glow-ferrari { box-shadow: 0 0 20px rgba(232, 0, 32, 0.3); }
+::-webkit-scrollbar-track {
+  background: black;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #333;
+}

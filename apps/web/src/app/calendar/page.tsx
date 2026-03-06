@@ -144,17 +144,19 @@ export default async function CalendarPage() {
   // and then follow the EXPECTED_2026_GPS order.
 
   return (
-    <div className="flex flex-col gap-8 py-12 px-6 max-w-7xl mx-auto">
-      <header className="flex flex-col gap-2">
+    <div className="flex flex-col gap-12 py-12 px-6 max-w-7xl mx-auto">
+      <header className="flex flex-col gap-4">
         <div className="flex items-center gap-3">
-          <span className="live-indicator" />
-          <h1 className="text-4xl font-bold tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
-            Temporada 2026
+          <div className="live-indicator" />
+          <h1 className="text-5xl font-black tracking-tighter text-white uppercase font-f1 lg:text-7xl">
+            Temporada <span className="text-primary">2026</span>
           </h1>
         </div>
-        <p className="text-text-secondary text-lg">
-          Calendario oficial y estados de sesión en tiempo real.
+        <p className="text-text-secondary text-xl max-w-2xl font-light leading-relaxed">
+          The ultimate racing calendar. Track live sessions, official standings, and upcoming Grand
+          Prix events with real-time telemetry updates.
         </p>
+        <div className="f1-divider" />
       </header>
 
       <div className="flex flex-col gap-12">
@@ -165,14 +167,18 @@ export default async function CalendarPage() {
             return (
               <GrandPrixSection
                 key={gp.name}
+                name={gp.name}
                 location={matchedLocation || gp.name}
+                country={gp.country}
                 sessions={sessionsForGp}
               />
             );
           }
 
           // Placeholder for future GPs
-          const flagUrl = `https://purecatamphetamine.github.io/country-flag-icons/3x2/${gp.country}.svg`;
+          const flagUrl = gp.country
+            ? `https://flagcdn.com/w80/${gp.country.toLowerCase()}.png`
+            : 'https://flagcdn.com/w80/un.png';
           return (
             <section
               key={gp.name}
@@ -204,8 +210,11 @@ export default async function CalendarPage() {
         })}
       </div>
 
-      <footer className="mt-12 p-6 border-t border-border text-center text-muted text-sm">
-        Datos proporcionados por la API de OpenF1 • Temporada 2026
+      <footer className="mt-20 p-10 border-t border-white/5 text-center flex flex-col items-center gap-4">
+        <div className="live-indicator !bg-white/20 !shadow-none" />
+        <p className="text-muted text-[10px] font-mono uppercase tracking-[0.5em]">
+          Powered by OpenF1 API • PitLine 2026 Systems
+        </p>
       </footer>
     </div>
   );

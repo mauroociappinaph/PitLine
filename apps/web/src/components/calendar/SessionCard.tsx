@@ -1,35 +1,51 @@
 import { Session } from 'shared-types';
+import Link from 'next/link';
 
-interface SessionCardProps {
-  session: Session;
-}
-
-export function SessionCard({ session }: SessionCardProps) {
-  const startDate = new Date(session.dateStart);
-  const timeString = startDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-  const dateString = startDate.toLocaleDateString([], { day: '2-digit', month: 'short' });
-
-  const isLive =
-    new Date() >= new Date(session.dateStart) && new Date() <= new Date(session.dateEnd);
-  const isPast = new Date() > new Date(session.dateEnd);
+export function SessionCard({ session }: { session: Session }) {
+  const isPast = new Date(session.dateEnd) < new Date();
 
   return (
-    <div
-      className={`card-f1 flex justify-between items-center p-4 ${isLive ? 'border-cta glow-cta animate-pulse' : ''}`}
-    >
-      <div className="flex flex-col">
-        <span className="text-xs font-mono text-muted uppercase tracking-wider">
-          {session.sessionType}
-        </span>
-        <span className="font-bold text-lg">{session.sessionName}</span>
+    <div className="glass-card p-5 rounded-xl flex items-center justify-between group">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center gap-2">
+          <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-primary/70">
+            {session.sessionType}
+          </span>
+          {isPast && (
+            <span className="px-1.5 py-0.5 rounded-sm bg-white/5 border border-white/10 text-[8px] font-black uppercase text-muted">
+              Finished
+            </span>
+          )}
+        </div>
+        <h3 className="font-bold text-lg text-white group-hover:text-primary transition-colors">
+          {session.sessionName}
+        </h3>
+        <div className="flex items-center gap-2 text-[10px] font-mono text-muted uppercase tracking-widest">
+          <span>{new Date(session.dateStart).toLocaleDateString()}</span>
+          <span className="w-1 h-1 rounded-full bg-white/20" />
+          <span>
+            {new Date(session.dateStart).toLocaleTimeString([], {
+              hour: '2-digit',
+              minute: '2-digit',
+            })}
+          </span>
+        </div>
       </div>
 
-      <div className="flex flex-col items-end">
-        <span className="text-sm font-bold">{timeString}</span>
-        <span className="text-xs text-secondary">{dateString}</span>
-        {isLive && <span className="mt-1 live-badge">LIVE</span>}
-        {isPast && (
-          <span className="mt-1 text-[10px] text-muted font-bold uppercase">Finished</span>
+      <div className="flex flex-col items-end gap-3">
+        {isPast ? (
+          <Link href={`/results/${session.sessionKey}`} className="btn-premium">
+            Results
+          </Link>
+        ) : (
+          <div className="flex flex-col items-end">
+            <span className="text-[9px] font-black uppercase tracking-[0.2em] text-muted mb-1">
+              Upcoming
+            </span>
+            <div className="w-20 h-1 bg-white/5 rounded-full overflow-hidden">
+              <div className="w-1/3 h-full bg-primary/20" />
+            </div>
+          </div>
         )}
       </div>
     </div>

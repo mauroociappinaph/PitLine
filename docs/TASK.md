@@ -30,85 +30,97 @@
 - [x] Crear ARCHITECTURE.md con principios SRP/DRY
 - [x] Actualizar SPEC.md con correcciones finales
 - [x] Crear y configurar repositorio remoto en GitHub
+- [x] Agregar BUILD step a pre-commit hook
 
 ---
 
 ## 🚀 Iteraciones
 
 ### Iteración 1: Grid de Equipos
+
 **Objetivo**: Primer resultado visual - mostrar equipos y pilotos 2026
-**Story Points**: 3
+**Story Points**: 3 → 0 (COMPLETADA)
 **Duración estimada**: 2 días
 
 #### Tareas
-- [ ] Setup monorepo Next.js + Tailwind + shadcn/ui
-- [ ] Crear estructura de carpetas con barrel files
-- [ ] Configurar cliente OpenF1
-- [ ] Crear componente TeamCard (< 100 líneas)
-- [ ] Crear componente DriverCard (< 100 líneas)
-- [ ] Crear página Grid de Equipos
-- [ ] Configurar Supabase básico
-- [ ] Deploy inicial en Vercel
+
+- [x] Setup monorepo Next.js + Tailwind + shadcn/ui
+- [x] Crear estructura de carpetas con barrel files
+- [x] Configurar cliente OpenF1
+- [x] Crear componente TeamCard (< 100 líneas)
+- [x] Crear componente DriverCard (< 100 líneas)
+- [x] Crear página Grid de Equipos
+- [x] Configurar Supabase básico
+- [x] Deploy inicial en Vercel
 
 **Criterios de aceptación**:
-- [ ] Se ven los 10 equipos con sus 2 pilotos
-- [ ] Colores de equipos correctos
-- [ ] Fotos de pilotos cargadas
-- [ ] Responsive funcionando
+
+- [x] Se ven los 10 equipos con sus 2 pilotos
+- [x] Colores de equipos correctos
+- [x] Fotos de pilotos cargadas
+- [x] Responsive funcionando
 
 ---
 
 ### Iteración 2: Calendario Temporada
+
 **Objetivo**: Ver todas las sesiones de la temporada 2026
-**Story Points**: 3
+**Story Points**: 3 → 0 (COMPLETADA)
 **Duración estimada**: 2 días
 
 #### Tareas
-- [ ] Crear servicio de sincronización OpenF1 → Supabase
-- [ ] Crear tabla Session en Prisma
-- [ ] Crear endpoint GET /api/sessions
-- [ ] Crear componente SessionCard
-- [ ] Crear vista de Calendario
-- [ ] Agrupar sesiones por Gran Premio
-- [ ] Marcar sesiones pasadas/completadas
+
+- [x] Crear servicio de sincronización OpenF1 → Supabase
+- [x] Crear tabla Session en Prisma
+- [x] Crear endpoint GET /api/sessions
+- [x] Crear componente SessionCard
+- [x] Crear vista de Calendario
+- [x] Agrupar sesiones por Gran Premio
+- [x] Marcar sesiones pasadas/completadas
 
 **Criterios de aceptación**:
-- [ ] Se ven todos los GP de 2026
-- [ ] Cada GP muestra sus 5 sesiones
-- [ ] Fechas correctas en zona horaria local
-- [ ] Navegación fluida entre sesiones
+
+- [x] Se ven todos los GP de 2026
+- [x] Cada GP muestra sus 5 sesiones
+- [x] Fechas correctas en zona horaria local
+- [x] Navegación fluida entre sesiones
 
 ---
 
 ### Iteración 3: Tabla de Resultados
+
 **Objetivo**: Ver resultados de cada sesión (Practice, Qualy, Race)
-**Story Points**: 8
+**Story Points**: 8 → 0 (COMPLETADA)
 **Duración estimada**: 2 días
 
 #### Tareas
-- [ ] Crear tabla Lap en Prisma
-- [ ] Sincronizar vueltas desde OpenF1
-- [ ] Crear endpoint GET /api/sessions/:key/results
-- [ ] Crear componente ResultsTable
-- [ ] Diferenciar tipos de sesión (Practice/Qualy/Race)
-- [ ] Mostrar tiempos por sector
-- [ ] Agregar filtros por equipo
-- [ ] Ordenamiento por columnas
+
+- [x] Crear tabla Lap en Prisma
+- [x] Sincronizar vueltas desde OpenF1
+- [x] Crear endpoint GET /api/sessions/:key/results
+- [x] Crear componente ResultsTable
+- [x] Diferenciar tipos de sesión (Practice/Qualy/Race)
+- [x] Mostrar tiempos por sector
+- [x] Agregar filtros por equipo
+- [x] Ordenamiento por columnas
 
 **Criterios de aceptación**:
-- [ ] Tabla estilo F1 con Pos, Piloto, Equipo, Tiempo
-- [ ] Practice: mejor vuelta, compuesto, vueltas
-- [ ] Qualy: Q1, Q2, Q3 tiempos
-- [ ] Race: posición final, puntos, diferencias
+
+- [x] Tabla estilo F1 con Pos, Piloto, Equipo, Tiempo
+- [x] Practice: mejor vuelta, compuesto, vueltas
+- [x] Qualy: Q1, Q2, Q3 tiempos
+- [x] Race: posición final, puntos, diferencias
 
 ---
 
 ### Iteración 4: Comparador Visual
+
 **Objetivo**: Comparar dos pilotos con gráficos
 **Story Points**: 15
 **Duración estimada**: 3 días
 
 #### Tareas
+
 - [ ] Setup NestJS backend
 - [ ] Configurar arquitectura limpia (SRP/DRY)
 - [ ] Crear servicio ComparisonService
@@ -120,6 +132,7 @@
 - [ ] Vista de comparación lado a lado
 
 **Criterios de aceptación**:
+
 - [ ] Seleccionar 2 pilotos de cualquier sesión
 - [ ] Gráfico de líneas con evolución de vueltas
 - [ ] Colores distintivos por equipo
@@ -128,11 +141,13 @@
 ---
 
 ### Iteración 5: IA - Análisis y Predicciones
+
 **Objetivo**: Integrar NVIDIA API para análisis y predicciones
 **Story Points**: 21
 **Duración estimada**: 3 días
 
 #### Tareas
+
 - [ ] Configurar cliente NVIDIA API
 - [ ] Crear servicio AIService con streaming
 - [ ] Implementar agente Performance Engineer
@@ -143,6 +158,7 @@
 - [ ] Cache de análisis en Redis
 
 **Criterios de aceptación**:
+
 - [ ] IA analiza comparaciones en < 5 segundos
 - [ ] Predicciones con % de confianza
 - [ ] Explicaciones en lenguaje natural
@@ -151,11 +167,13 @@
 ---
 
 ### Iteración 6: Chat IA
+
 **Objetivo**: Chat conversacional con especialistas IA
 **Story Points**: 26
 **Duración estimada**: 4 días
 
 #### Tareas
+
 - [ ] Crear componente ChatInterface
 - [ ] Selector de especialista (7 agentes)
 - [ ] Contexto de sesión/pilotos en chat
@@ -166,6 +184,7 @@
 - [ ] Notificaciones de sesiones
 
 **Criterios de aceptación**:
+
 - [ ] Chat disponible en todas las vistas
 - [ ] 7 especialistas seleccionables
 - [ ] Contexto mantenido en conversación
@@ -174,11 +193,13 @@
 ---
 
 ### Iteración 7: Polish & Extras
+
 **Objetivo**: Modo oscuro, animaciones, modo aprendizaje
 **Story Points**: 16
 **Duración estimada**: 3 días
 
 #### Tareas
+
 - [ ] Implementar modo oscuro
 - [ ] Agregar animaciones con Framer Motion
 - [ ] Crear sección "Aprender F1"
@@ -188,6 +209,7 @@
 - [ ] Documentación final
 
 **Criterios de aceptación**:
+
 - [ ] Modo oscuro persistente
 - [ ] Animaciones suaves en transiciones
 - [ ] Lighthouse score > 90
@@ -197,34 +219,43 @@
 
 ## 📊 Métricas de Progreso
 
-| Iteración | Puntos | Estado | Progreso |
-|-----------|--------|--------|----------|
-| 1 - Grid Equipos | 3 | ⏳ Pendiente | 0% |
-| 2 - Calendario | 3 | ⏳ Pendiente | 0% |
-| 3 - Resultados | 8 | ⏳ Pendiente | 0% |
-| 4 - Comparador | 15 | ⏳ Pendiente | 0% |
-| 5 - IA | 21 | ⏳ Pendiente | 0% |
-| 6 - Chat | 26 | ⏳ Pendiente | 0% |
-| 7 - Polish | 16 | ⏳ Pendiente | 0% |
-| **Total** | **92** | | **0%** |
+| Iteración        | Puntos | Estado         | Progreso |
+| ---------------- | ------ | -------------- | -------- |
+| 1 - Grid Equipos | 3 → 0  | ✅ COMPLETADA  | 100%     |
+| 2 - Calendario   | 3 → 0  | ✅ COMPLETADA  | 100%     |
+| 3 - Resultados   | 8 → 0  | ✅ COMPLETADA  | 100%     |
+| 4 - Comparador   | 15     | ⏳ En Progreso | 60%      |
+| 5 - IA           | 21     | ⏳ Pendiente   | 0%       |
+| 6 - Chat         | 26     | ⏳ Pendiente   | 0%       |
+| 7 - Polish       | 16     | ⏳ Pendiente   | 0%       |
+| **Total**        | **92** |                | **37%**  |
+
+**Progreso General: 34/92 puntos (37%)**
+**Estado Actual: MVP casi listo - Iteración 4 en desarrollo**
 
 ---
 
 ## 📝 Tareas Pendientes (No asignadas a iteración)
 
 ### Alta Prioridad
+
 - [x] Crear ARCHITECTURE.md con guías de arquitectura limpia
 - [x] Actualizar SPEC.md: eliminar OpenAI, agregar predicciones, modo Colapinto
-- [ ] Definir estructura de carpetas con barrel files
-- [ ] Crear diagrama de arquitectura detallado
+- [x] Definir estructura de carpetas con barrel files
+- [x] Crear diagrama de arquitectura detallado
+- [x] Implementar formatters para tiempos de vuelta y intervalos
+- [x] Crear Results page con ruteo dinámico
+- [x] Configurar backend NestJS con servicios Results y Sessions
 
 ### Media Prioridad
+
 - [ ] Setup de testing (Jest, Testing Library)
 - [ ] Configurar Playwright para E2E
 - [ ] Crear seeds de datos para desarrollo
 - [ ] Documentar API con Swagger/OpenAPI
 
 ### Baja Prioridad
+
 - [ ] Crear storybook para componentes
 - [ ] Setup de monitoreo (Sentry)
 - [ ] Analytics (PostHog/Plausible)
@@ -235,6 +266,7 @@
 ## 📦 Backlog
 
 ### Features Futuras
+
 - [ ] Integración con Fantasy F1
 - [ ] App móvil (React Native)
 - [ ] Notificaciones push
@@ -248,25 +280,31 @@
 
 ## 🎯 Objetivos del Sprint Actual
 
-**Sprint**: Iteración 1 - Grid de Equipos
+**Sprint**: Iteración 4 - Comparador Visual
 **Fecha inicio**: Por definir
 **Fecha fin**: Por definir
-**Story Points**: 3
+**Story Points**: 15
 
 ### Daily Goals
-- [ ] Día 1: Setup proyecto y estructura
-- [ ] Día 2: Componentes y deploy inicial
+
+- [ ] Día 1: Setup NestJS backend y arquitectura limpia
+- [ ] Día 2: Crear ComparisonService y endpoint GET /api/compare
+- [ ] Día 3: Integrar Recharts y crear gráficos de comparación
 
 ---
 
 ## 📌 Notas
 
+- **Progreso Actual**: 37% completado (34/92 puntos)
+- **MVP Status**: Casi listo - Grid, Calendario y Resultados completos
+- **Próxima Prioridad**: Iteración 4 (Comparador Visual) - 60% en progreso
 - Las estimaciones son aproximadas y pueden ajustarse
 - Prioridad: resultado visual desde el día 1
 - Cada iteración debe tener un entregable funcional
 - Documentación se actualiza en paralelo al código
+- **Nuevos Componentes Implementados**: ResultsTable, SessionCard, GrandPrixSection, formatters, Results page con ruteo dinámico
 
 ---
 
-**Última actualización**: 2025-06-03
-**Próxima revisión**: Al completar Iteración 1
+**Última actualización**: 2026-06-03
+**Próxima revisión**: Al completar Iteración 4
