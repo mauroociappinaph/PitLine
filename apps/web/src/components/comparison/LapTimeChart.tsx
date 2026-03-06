@@ -64,8 +64,9 @@ export function LapTimeChart({
     async function fetchData() {
       setLoading(true);
       try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
         const res = await fetch(
-          `http://localhost:3001/comparison?sessionKey=${sessionKey}&driver1=${driver1}&driver2=${driver2}`
+          `${baseUrl}/comparison?sessionKey=${sessionKey}&driver1=${driver1}&driver2=${driver2}`
         );
         const json = await res.json();
         setData(json);

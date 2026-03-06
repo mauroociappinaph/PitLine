@@ -59,7 +59,8 @@ function ChatInterfaceInner() {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/ai/chat', {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${baseUrl}/ai/chat`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

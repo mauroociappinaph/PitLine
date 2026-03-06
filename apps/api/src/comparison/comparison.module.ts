@@ -6,5 +6,6 @@ import { PrismaService } from '../prisma/prisma.service';
 @Module({
   controllers: [ComparisonController],
   providers: [ComparisonService, PrismaService],
+  exports: [ComparisonService],
 })
 export class ComparisonModule {}

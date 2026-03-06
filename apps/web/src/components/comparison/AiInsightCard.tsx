@@ -23,7 +23,8 @@ export function AiInsightCard({ sessionKey, driver1, driver2 }: AiInsightCardPro
 
     const fetchAnalysis = async () => {
       try {
-        const response = await fetch('http://localhost:3001/ai/analyze', {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${baseUrl}/ai/analyze`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
