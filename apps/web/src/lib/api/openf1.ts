@@ -41,8 +41,8 @@ export async function getDrivers(sessionKey?: number | string): Promise<Driver[]
 /**
  * Fetch sessions from OpenF1 API.
  */
-export async function getSessions(year: number = 2024): Promise<Session[]> {
-  // Using 2024 as default because 2026 data is not yet available in the public API
+export async function getSessions(year: number = 2026): Promise<Session[]> {
+  // Using 2026 data as requested.
   const url = `${OPENF1_BASE_URL}/sessions?year=${year}`;
 
   try {
