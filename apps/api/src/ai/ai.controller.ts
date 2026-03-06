@@ -98,4 +98,61 @@ export class AiController {
       res.end();
     }
   }
+
+  @Post('chat')
+  async chatWithAgent(
+    @Body('agentType') agentType: any,
+    @Body('messages')
+    messages: { role: 'user' | 'assistant' | 'system'; content: string }[],
+    @Body('isSimpleMode') isSimpleMode: boolean,
+    @Body('context') context: any,
+    @Res() res: Response,
+  ) {
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    try {
+      const stream = await this.aiService.chatWithAgentStream(
+        agentType,
+        messages || [],
+        isSimpleMode || false,
+        context,
+      );
+
+      for await (const chunk of stream) {
+        if (
+          !chunk.choices ||
+          chunk.choices.length === 0 ||
+          !chunk.choices[0].delta
+        ) {
+          continue;
+        }
+
+        const delta = chunk.choices[0].delta;
+        const content = delta.content || '';
+        const reasoning = (delta as any).reasoning_content || '';
+
+        if (reasoning) {
+          const formattedReasoning = `<span style="color: #666; font-style: italic;">${reasoning}</span>`;
+          res.write(
+            `data: ${JSON.stringify({ content: formattedReasoning })}\n\n`,
+          );
+        }
+
+        if (content) {
+          res.write(`data: ${JSON.stringify({ content })}\n\n`);
+        }
+      }
+
+      res.write('data: [DONE]\n\n');
+      res.end();
+    } catch (error: any) {
+      console.error('AI Chat Error:', error);
+      res.write(
+        `data: ${JSON.stringify({ error: error.message || 'AI Chat failed' })}\n\n`,
+      );
+      res.end();
+    }
+  }
 }

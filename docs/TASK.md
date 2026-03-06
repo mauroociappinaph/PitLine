@@ -143,26 +143,26 @@
 ### Iteración 5: IA - Análisis y Predicciones
 
 **Objetivo**: Integrar NVIDIA API para análisis y predicciones
-**Story Points**: 21
+**Story Points**: 21 → 0 (COMPLETADA)
 **Duración estimada**: 3 días
 
 #### Tareas
 
-- [ ] Configurar cliente NVIDIA API
-- [ ] Crear servicio AIService con streaming
-- [ ] Implementar agente Performance Engineer
-- [ ] Endpoint POST /api/ai/analyze
-- [ ] Análisis automático de comparaciones
-- [ ] Predicción de Qualy basada en Practices
-- [ ] Explicaciones de "por qué fue más rápido"
-- [ ] Cache de análisis en Redis
+- [x] Configurar cliente NVIDIA API
+- [x] Crear servicio AIService con streaming
+- [x] Implementar agente Performance Engineer
+- [x] Endpoint POST /api/ai/analyze
+- [x] Análisis automático de comparaciones
+- [x] Predicción de Qualy basada en Practices
+- [x] Explicaciones de "por qué fue más rápido"
+- [x] Cache de análisis en Redis
 
 **Criterios de aceptación**:
 
-- [ ] IA analiza comparaciones en < 5 segundos
-- [ ] Predicciones con % de confianza
-- [ ] Explicaciones en lenguaje natural
-- [ ] Streaming de respuesta funciona
+- [x] IA analiza comparaciones en < 5 segundos
+- [x] Predicciones con % de confianza
+- [x] Explicaciones en lenguaje natural
+- [x] Streaming de respuesta funciona
 
 ---
 
@@ -225,13 +225,13 @@
 | 2 - Calendario   | 3 → 0  | ✅ COMPLETADA | 100%     |
 | 3 - Resultados   | 8 → 0  | ✅ COMPLETADA | 100%     |
 | 4 - Comparador   | 15 → 0 | ✅ COMPLETADA | 100%     |
-| 5 - IA           | 21     | ⏳ Pendiente  | 0%       |
-| 6 - Chat         | 26     | ⏳ Pendiente  | 0%       |
+| 5 - IA           | 21 → 0 | ✅ COMPLETADA | 100%     |
+| 6 - Chat         | 26     | ⏳ En Marcha  | 0%       |
 | 7 - Polish       | 16     | ⏳ Pendiente  | 0%       |
-| **Total**        | **92** |               | **52%**  |
+| **Total**        | **92** |               | **75%**  |
 
-**Progreso General: 48/92 puntos (52%)**
-**Estado Actual: MVP listo - Iteración 5 próxima**
+**Progreso General: 69/92 puntos (75%)**
+**Estado Actual: MVP listo - Iteración 6 en curso**
 
 ---
 
@@ -280,16 +280,16 @@
 
 ## 🎯 Objetivos del Sprint Actual
 
-**Sprint**: Iteración 5 - IA - Análisis y Predicciones
-**Fecha inicio**: Por definir
+**Sprint**: Iteración 6 - Chat IA
+**Fecha inicio**: 2026-03-06
 **Fecha fin**: Por definir
-**Story Points**: 21
+**Story Points**: 26
 
 ### Daily Goals
 
-- [ ] Día 1: Configurar cliente NVIDIA API y crear servicio AIService
-- [ ] Día 2: Implementar agente Performance Engineer y endpoint POST /api/ai/analyze
-- [ ] Día 3: Crear cache de análisis en Redis y pruebas de streaming
+- [ ] Día 1: Configurar frontend component `ChatInterface` y selector de 7 agentes
+- [ ] Día 2: Modificar NestJS `AiController` para manejar los distintos system prompts de `AGENTS.md`
+- [ ] Día 3: Integrar historial de chat, contexto de sesión y persistencia local o Supabase
 
 ---
 

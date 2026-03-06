@@ -7,6 +7,7 @@ export const metadata: Metadata = {
 };
 
 import { Navbar } from '@/components/layout/Navbar';
+import { ChatInterface } from '@/components/chat/ChatInterface';
 
 export default function RootLayout({
   children,
@@ -15,9 +16,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className="antialiased font-sans">
+      <body className="antialiased font-sans flex flex-col min-h-screen relative">
         <Navbar />
-        <main className="min-h-screen bg-background pt-24">{children}</main>
+        <main className="flex-1 bg-background pt-24 pb-8">{children}</main>
+        <ChatInterface />
       </body>
     </html>
   );

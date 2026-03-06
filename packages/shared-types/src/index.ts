@@ -30,3 +30,12 @@ export interface Session {
   countryCode: string;
   circuitShortName: string;
 }
+export type AgentType =
+  | 'tire'
+  | 'race'
+  | 'performance'
+  | 'telemetry'
+  | 'strategy'
+  | 'aero'
+  | 'track'
+  | 'general';

@@ -2,6 +2,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import Redis from 'ioredis';
+import { AgentType } from 'shared-types';
+import { AGENT_PROMPTS, SIMPLE_MODE_APPEND } from './agents.config';
 
 @Injectable()
 export class AiService {
@@ -10,23 +12,29 @@ export class AiService {
   private readonly logger = new Logger(AiService.name);
 
   constructor(private configService: ConfigService) {
-    const apiKey =
-      this.configService.get<string>('OPENAI_API_KEY') ||
-      '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';
-    const originalBaseUrl = this.configService.get<string>('OPENAI_BASE_URL');
+    const nvidiaApiKey = this.configService.get<string>('NVIDIA_API_KEY');
+    const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
+    const nvidiaBaseUrl = this.configService.get<string>('NVIDIA_BASE_URL');
+    const openaiBaseUrl = this.configService.get<string>('OPENAI_BASE_URL');
 
-    let baseURL = originalBaseUrl;
-    if (!baseURL && apiKey.startsWith('nvapi-')) {
+    const apiKey = nvidiaApiKey || openaiApiKey || '';
+
+    let baseURL = openaiBaseUrl;
+
+    // Explicitly prioritize NVIDIA if key is NVIDIA or if NVIDIA_BASE_URL is provided
+    if (nvidiaBaseUrl) {
+      baseURL = nvidiaBaseUrl;
+    } else if (nvidiaApiKey || apiKey.startsWith('nvapi-')) {
       baseURL = 'https://integrate.api.nvidia.com/v1';
     }
 
     this.logger.log(
-      `Initializing AI Service with Base URL: ${baseURL || 'default (OpenAI)'}`,
+      `AI Service Config: Model=z-ai/glm5, BaseURL=${baseURL || 'default (OpenAI)'}, HasKey=${!!apiKey}`,
     );
 
     this.openai = new OpenAI({
       apiKey,
-      baseURL,
+      baseURL: baseURL || undefined,
     });
 
     const redisUrl = this.configService.get<string>('REDIS_URL');
@@ -138,6 +146,52 @@ export class AiService {
       return stream;
     } catch (error) {
       this.logger.error('Failed to get AI completion stream', error);
+      throw error;
+    }
+  }
+
+  async chatWithAgentStream(
+    agentType: AgentType,
+    messages: { role: 'user' | 'assistant' | 'system'; content: string }[],
+    isSimpleMode: boolean,
+    context?: any,
+  ) {
+    let systemPrompt = AGENT_PROMPTS[agentType] || AGENT_PROMPTS.general;
+
+    if (isSimpleMode) {
+      systemPrompt += SIMPLE_MODE_APPEND;
+    }
+
+    if (context) {
+      systemPrompt += `\n\nCONTEXTO DE APP ACTUAL (Solo úsalo si es relevante):\n${JSON.stringify(context, null, 2)}`;
+    }
+
+    const fullMessages = [
+      { role: 'system', content: systemPrompt },
+      ...messages,
+    ];
+
+    try {
+      const stream = (await this.openai.chat.completions.create({
+        model: 'z-ai/glm5',
+        messages: fullMessages as any,
+        temperature: 0.8,
+        top_p: 1,
+        max_tokens: 16384,
+        stream: true,
+        extra_body: {
+          chat_template_kwargs: {
+            enable_thinking: true,
+            clear_thinking: false,
+          },
+        },
+      } as any)) as unknown as import('openai/streaming').Stream<
+        import('openai/resources/chat/completions').ChatCompletionChunk
+      >;
+
+      return stream;
+    } catch (error) {
+      this.logger.error('Failed to get Chat stream', error);
       throw error;
     }
   }
