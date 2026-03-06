@@ -22,7 +22,7 @@ export function TeamCard({ teamName, teamColor, drivers }: TeamCardProps) {
 
       <div className="flex flex-col gap-2 mt-2">
         {drivers.map((driver) => (
-          <div key={driver.driverNumber} className="flex justify-between items-center p-2 rounded bg-background/50 hover:bg-surface-elevated transition-colors">
+          <div key={`${driver.nameAcronym}-${driver.driverNumber}`} className="flex justify-between items-center p-2 rounded bg-background/50 hover:bg-surface-elevated transition-colors">
             <div className="flex items-center gap-3">
               <span className="text-sm font-mono text-muted">{driver.driverNumber}</span>
               <span className="font-semibold">{driver.firstName} {driver.lastName}</span>
