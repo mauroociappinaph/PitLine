@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500;600;700&family=Fira+Sans:wght@300;400;500;600;700&display=swap');
+@import "tailwindcss";
+
+:root {
+  --background: #0A0A0F;
+  --foreground: #FFFFFF;
+  --surface: #1A1A24;
+  --surface-elevated: #252532;
+  --border: #333344;
+  --text-secondary: #A0A0B0;
+  --text-muted: #6B6B7B;
+  --primary: #1E40AF;
+  --secondary: #3B82F6;
+  --cta: #F59E0B;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-elevated: var(--surface-elevated);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-cta: var(--cta);
+
+  --font-sans: 'Fira Sans', system-ui, sans-serif;
+  --font-mono: 'Fira Code', monospace;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.text-secondary { color: var(--text-secondary); }
+.text-muted { color: var(--text-muted); }
+
+.card-f1 {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 150ms ease;
+}
+
+.card-f1:hover {
+  background: var(--surface-elevated);
+  transform: translateY(-2px);
+  border-color: var(--text-muted);
+}
+
+.glow-rb { box-shadow: 0 0 20px rgba(54, 113, 198, 0.3); }
+.glow-mclaren { box-shadow: 0 0 20px rgba(255, 128, 0, 0.3); }
+.glow-ferrari { box-shadow: 0 0 20px rgba(232, 0, 32, 0.3); }

@@ -1,0 +1,91 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Session {
+  id                String   @id @default(cuid())
+  sessionKey        Int      @unique
+  year              Int      // Solo 2026
+  sessionName       String
+  sessionType       String
+  dateStart         DateTime
+  dateEnd           DateTime
+  location          String
+  countryCode       String
+  circuitShortName  String
+
+  laps              Lap[]
+  carData           CarData[]
+
+  @@index([year])
+  @@index([sessionKey])
+}
+
+model Driver {
+  id              String   @id @default(cuid())
+  sessionKey      Int
+  driverNumber    Int
+  nameAcronym     String
+  fullName        String
+  firstName       String
+  lastName        String
+  teamName        String
+  teamColor       String
+  countryCode     String
+  headshotUrl     String?
+
+  laps            Lap[]
+  carData         CarData[]
+
+  @@unique([sessionKey, driverNumber])
+  @@index([sessionKey])
+}
+
+model Lap {
+  id                String   @id @default(cuid())
+  sessionKey        Int
+  driverNumber      Int
+  lapNumber         Int
+  lapDuration       Float?
+  durationSector1   Float?
+  durationSector2   Float?
+  durationSector3   Float?
+  i1Speed           Float?
+  i2Speed           Float?
+  stSpeed           Float?
+  isPitOutLap       Boolean  @default(false)
+  isPitInLap        Boolean  @default(false)
+  compound          String?
+  tyreLife          Int?
+
+  session           Session  @relation(fields: [sessionKey], references: [sessionKey])
+  driver            Driver   @relation(fields: [sessionKey, driverNumber], references: [sessionKey, driverNumber])
+
+  @@unique([sessionKey, driverNumber, lapNumber])
+  @@index([sessionKey])
+  @@index([driverNumber])
+}
+
+model CarData {
+  id            String   @id @default(cuid())
+  sessionKey    Int
+  driverNumber  Int
+  date          DateTime
+  rpm           Int?
+  speed         Int?
+  nGear         Int?
+  throttle      Int?
+  brake         Int?
+  drs           Int?
+
+  session       Session  @relation(fields: [sessionKey], references: [sessionKey])
+  driver        Driver   @relation(fields: [sessionKey, driverNumber], references: [sessionKey, driverNumber])
+
+  @@index([sessionKey, driverNumber])
+  @@index([date])
+}

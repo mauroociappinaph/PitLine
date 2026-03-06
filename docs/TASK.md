@@ -29,6 +29,7 @@
 - [x] Crear TASK.md (este archivo)
 - [x] Crear ARCHITECTURE.md con principios SRP/DRY
 - [x] Actualizar SPEC.md con correcciones finales
+- [x] Crear y configurar repositorio remoto en GitHub
 
 ---
 
