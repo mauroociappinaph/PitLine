@@ -18,69 +18,87 @@ export function ResultsTable({ results }: ResultsTableProps) {
   const leaderTime = results[0]?.fastestLapTime || 0;
 
   return (
-    <div className="w-full overflow-x-auto rounded-2xl glass-card">
+    <div className="w-full overflow-x-auto bg-black border border-white/5 rounded-sm">
       <table className="w-full text-left border-collapse">
         <thead>
-          <tr className="bg-white/5 border-b border-white/5">
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted">Pos</th>
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted">
-              Driver
+          <tr className="bg-surface-elevated border-b-2 border-primary">
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white">
+              Pos
             </th>
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted">Team</th>
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted text-center">
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white">
+              Driver (Personnel)
+            </th>
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white">
+              Team / Constructor
+            </th>
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white text-center">
               Laps
             </th>
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted text-right">
-              Time
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white text-right">
+              Time (Best)
             </th>
-            <th className="p-5 font-f1 text-[10px] uppercase tracking-[0.2em] text-muted text-right">
+            <th className="p-4 font-black italic text-[11px] uppercase tracking-[0.2em] text-white text-right">
               Interval
             </th>
           </tr>
         </thead>
-        <tbody className="divide-y divide-white/5">
+        <tbody className="divide-y divide-white/[0.03]">
           {results.map(entry => (
-            <tr key={entry.driverNumber} className="hover:bg-white/[0.03] transition-colors group">
-              <td className="p-5">
+            <tr key={entry.driverNumber} className="hover:bg-primary/5 transition-colors group">
+              <td className="p-4">
                 <span
-                  className={`flex items-center justify-center w-8 h-8 rounded font-black text-sm italic ${
-                    entry.position === 1
-                      ? 'bg-primary text-black shadow-[0_0_15px_rgba(0,242,255,0.4)]'
-                      : 'bg-surface-elevated text-white/50'
+                  className={`inline-block font-black italic text-lg ${
+                    entry.position === 1 ? 'text-primary scale-125' : 'text-white/40'
                   }`}
                 >
-                  {entry.position}
+                  {entry.position.toString().padStart(2, '0')}
                 </span>
               </td>
-              <td className="p-5">
-                <div className="flex items-center gap-3">
+              <td className="p-4">
+                <div className="flex items-center gap-4">
                   <div
-                    className="w-1.5 h-10 rounded-full"
+                    className="w-1.5 h-10 skew-x-[-15deg]"
                     style={{
-                      backgroundColor: entry.teamColor || '#333',
-                      boxShadow: `0 0 10px ${entry.teamColor}44`,
+                      backgroundColor: entry.teamColor || '#E10600',
+                      boxShadow: entry.position === 1 ? `0 0 15px ${entry.teamColor}88` : 'none',
                     }}
                   />
                   <div className="flex flex-col">
-                    <span className="font-bold text-lg tracking-tight text-white group-hover:text-primary transition-colors">
+                    <span className="font-black text-lg tracking-tighter text-white uppercase italic group-hover:text-primary transition-colors">
                       {entry.driverName || `Driver ${entry.driverNumber}`}
                     </span>
-                    <span className="text-[10px] text-muted uppercase font-mono tracking-widest">
-                      #{entry.driverNumber}
+                    <span className="text-[10px] text-muted uppercase font-black tracking-[0.2em]">
+                      NO. {entry.driverNumber}
                     </span>
                   </div>
                 </div>
               </td>
-              <td className="p-5 text-xs font-bold text-text-secondary uppercase tracking-widest">
-                {entry.teamName || 'Privateer'}
+              <td className="p-4">
+                <div className="flex flex-col">
+                  <span className="text-xs font-black text-white/80 uppercase tracking-widest leading-none">
+                    {entry.teamName || 'Scuderia Independent'}
+                  </span>
+                  {entry.position === 1 && (
+                    <span className="text-[8px] text-primary font-black uppercase italic tracking-widest mt-1">
+                      Leader
+                    </span>
+                  )}
+                </div>
               </td>
-              <td className="p-5 text-center font-mono text-sm text-white/80">
+              <td className="p-4 text-center font-bold text-sm text-white/50">
                 {entry.lapsCompleted}
               </td>
-              <td className="p-5 text-right font-mono font-bold text-primary text-sm">
-                {entry.fastestLapTime ? formatLapTime(entry.fastestLapTime) : '--:--.---'}
+              <td className="p-4 text-right">
+                <div className="flex flex-col items-end">
+                  <span className="font-mono font-black text-primary text-base">
+                    {entry.fastestLapTime ? formatLapTime(entry.fastestLapTime) : '--:--.---'}
+                  </span>
+                  <span className="text-[8px] text-muted uppercase font-black tracking-widest">
+                    Fastest Lap
+                  </span>
+                </div>
               </td>
-              <td className="p-5 text-right font-mono text-[10px] text-muted group-hover:text-white transition-colors">
+              <td className="p-4 text-right font-mono font-bold text-xs text-muted group-hover:text-white transition-colors">
                 {entry.fastestLapTime && leaderTime
                   ? formatInterval(entry.fastestLapTime, leaderTime)
                   : '-'}
