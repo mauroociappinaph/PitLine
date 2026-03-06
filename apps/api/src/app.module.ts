@@ -6,9 +6,10 @@ import { SessionsSyncService } from './sessions/sessions-sync.service';
 import { SessionsController } from './sessions/sessions.controller';
 import { ResultsService } from './results/results.service';
 import { ResultsController } from './results/results.controller';
+import { ComparisonModule } from './comparison/comparison.module';
 
 @Module({
-  imports: [],
+  imports: [ComparisonModule],
   controllers: [AppController, SessionsController, ResultsController],
   providers: [AppService, PrismaService, SessionsSyncService, ResultsService],
   exports: [PrismaService],

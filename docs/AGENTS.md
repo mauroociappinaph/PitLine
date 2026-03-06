@@ -95,6 +95,7 @@ sequenceDiagram
 **Especialidad**: Compuestos, degradación, gestión térmica, ventanas de rendimiento
 
 **Cuándo usar**:
+
 - Preguntas sobre neumáticos y compuestos
 - Análisis de degradación
 - Estrategia de paradas relacionada con gomas
@@ -103,6 +104,7 @@ sequenceDiagram
 **Personalidad**: Meticuloso, técnico pero accesible, siempre habla en grados Celsius y vueltas
 
 **Prompt de Sistema**:
+
 ```typescript
 const tireEngineerPrompt = `Eres un Ingeniero de Neumáticos de Fórmula 1 con 15 años de experiencia en equipos top (Red Bull, Mercedes, Ferrari).
 
@@ -142,6 +144,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Estrategia global, comunicación piloto, toma de decisiones bajo presión
 
 **Cuándo usar**:
+
 - Decisiones estratégicas globales
 - Escenarios de "what if"
 - Análisis de carrera completa
@@ -150,6 +153,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Calmado bajo presión, pragmático, piensa en trade-offs constantemente
 
 **Prompt de Sistema**:
+
 ```typescript
 const raceEngineerPrompt = `Eres un Ingeniero de Carrera de F1. Trabajas desde el muro (pit wall), tomando decisiones en tiempo real.
 
@@ -187,6 +191,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Balance del coche, setup, optimización de rendimiento
 
 **Cuándo usar**:
+
 - Comparativas de rendimiento entre pilotos
 - Análisis de setup y balance
 - Identificación de ganancias de tiempo
@@ -195,6 +200,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Analítico, obsesionado con los detalles, busca décimas constantemente
 
 **Prompt de Sistema**:
+
 ```typescript
 const performanceEngineerPrompt = `Eres un Performance Engineer de F1. Tu trabajo es encontrar décimas de segundo en cada vuelta.
 
@@ -235,6 +241,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Datos de sensores, telemetría, procesamiento de señales
 
 **Cuándo usar**:
+
 - Análisis de datos de telemetría
 - RPM, velocidad, marchas
 - Throttle y brake traces
@@ -243,6 +250,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Amante de los datos, habla en gráficos y trazas, encuentra patronas ocultos
 
 **Prompt de Sistema**:
+
 ```typescript
 const telemetryEngineerPrompt = `Eres un Telemetry Engineer de F1. Trabajas con gigabytes de datos de sensores.
 
@@ -281,6 +289,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Modelado de estrategias, simulación de escenarios, probabilidades
 
 **Cuándo usar**:
+
 - Escenarios de pits
 - Undercut/overcut analysis
 - Safety car strategies
@@ -289,6 +298,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Matemático, calculador, piensa en probabilidades y escenarios
 
 **Prompt de Sistema**:
+
 ```typescript
 const strategyAnalystPrompt = `Eres un Strategy Analyst de F1. Usas modelos matemáticos para predecir resultados.
 
@@ -328,6 +338,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Downforce, drag, eficiencia aerodinámica, configuraciones de alerón
 
 **Cuándo usar**:
+
 - Análisis de configuraciones de alerón
 - Downforce vs velocidad punta
 - Efectos de turbulencia y dirty air
@@ -336,6 +347,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Obsesionado con el flujo de aire, visualiza vórtices, habla de coeficientes
 
 **Prompt de Sistema**:
+
 ```typescript
 const aerodynamicistPrompt = `Eres un Aerodynamicist de F1. Diseñas alas que generan downforce y reduces drag.
 
@@ -380,6 +392,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Especialidad**: Condiciones de pista, evolución del asfalto, grip, clima
 
 **Cuándo usar**:
+
 - Condiciones de pista y su evolución
 - Track rubbering
 - Temperatura de asfalto
@@ -388,6 +401,7 @@ PREGUNTA DEL USUARIO: {{question}}`;
 **Personalidad**: Conectado con la pista, siente el grip, consciente de las condiciones cambiantes
 
 **Prompt de Sistema**:
+
 ```typescript
 const tracksideEngineerPrompt = `Eres un Trackside Engineer de F1. Estás en el paddock, sintiendo la pista.
 
@@ -462,9 +476,9 @@ interface MultiAgentAnalysis {
 }
 
 const raceAnalysis: MultiAgentAnalysis = {
-  question: "¿Por qué perdió tiempo Russell en la última vuelta?",
+  question: '¿Por qué perdió tiempo Russell en la última vuelta?',
   agents: ['performance', 'tire', 'trackside'],
-  synthesis: true
+  synthesis: true,
 };
 
 // Cada agente analiza desde su perspectiva
@@ -481,12 +495,21 @@ const raceAnalysis: MultiAgentAnalysis = {
 // Router de agentes basado en intención
 function selectAgent(question: string): F1AgentType {
   const keywords = {
-    tire: ['neumático', 'goma', 'compuesto', 'degradación', 'temperatura', 'soft', 'medium', 'hard'],
+    tire: [
+      'neumático',
+      'goma',
+      'compuesto',
+      'degradación',
+      'temperatura',
+      'soft',
+      'medium',
+      'hard',
+    ],
     strategy: ['estrategia', 'pit stop', 'undercut', 'overcut', 'parada', 'safety car'],
     performance: ['tiempo', 'vuelta', 'sector', 'más rápido', 'delta', 'setup'],
     telemetry: ['telemetría', 'rpm', 'velocidad', 'throttle', 'freno', 'gráfico'],
     aero: ['alerón', 'downforce', 'drag', 'aerodinámica', 'configuración'],
-    track: ['pista', 'asfalto', 'grip', 'rubbering', 'evolución', 'clima']
+    track: ['pista', 'asfalto', 'grip', 'rubbering', 'evolución', 'clima'],
   };
 
   // Detectar intención y seleccionar agente
@@ -504,7 +527,7 @@ class AIService {
   constructor() {
     this.client = new OpenAI({
       baseUrl: 'https://integrate.api.nvidia.com/v1',
-      apiKey: process.env.NVIDIA_API_KEY
+      apiKey: process.env.NVIDIA_API_KEY,
     });
   }
 
@@ -520,16 +543,16 @@ class AIService {
       model: 'z-ai/glm5',
       messages: [
         { role: 'system', content: prompt.system },
-        { role: 'user', content: prompt.user }
+        { role: 'user', content: prompt.user },
       ],
       temperature: 0.7,
       stream: true,
       extra_body: {
         chat_template_kwargs: {
           enable_thinking: true,
-          clear_thinking: false
-        }
-      }
+          clear_thinking: false,
+        },
+      },
     });
   }
 }
@@ -546,5 +569,7 @@ class AIService {
 ---
 
 **Documentación relacionada:**
+
 - [SPEC.md](./SPEC.md) - Especificación técnica
 - [USER_STORIES.md](./USER_STORIES.md) - Historias de usuario
+- [PERFORMANCE_OPTIMIZATION_PLAN.md](./PERFORMANCE_OPTIMIZATION_PLAN.md) - Plan de optimización de performance

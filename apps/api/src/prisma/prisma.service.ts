@@ -7,10 +7,22 @@ export class PrismaService
   implements OnModuleInit, OnModuleDestroy
 {
   async onModuleInit() {
-    await this.$connect();
+    try {
+      await this.$connect();
+    } catch (e: any) {
+      console.warn(
+        `Prisma failed to connect to DB: ${e.message || 'Unknown error'}`,
+      );
+    }
   }
 
   async onModuleDestroy() {
-    await this.$disconnect();
+    try {
+      if (this.$disconnect) {
+        await this.$disconnect();
+      }
+    } catch {
+      // Ignore disconnect errors
+    }
   }
 }

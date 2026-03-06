@@ -116,27 +116,27 @@
 ### Iteración 4: Comparador Visual
 
 **Objetivo**: Comparar dos pilotos con gráficos
-**Story Points**: 15
+**Story Points**: 15 → 0 (COMPLETADA)
 **Duración estimada**: 3 días
 
 #### Tareas
 
-- [ ] Setup NestJS backend
-- [ ] Configurar arquitectura limpia (SRP/DRY)
-- [ ] Crear servicio ComparisonService
-- [ ] Crear endpoint GET /api/compare
-- [ ] Integrar Recharts para gráficos
-- [ ] Gráfico de tiempos de vuelta (línea)
-- [ ] Gráfico de sectores (barras)
-- [ ] Selector de pilotos
-- [ ] Vista de comparación lado a lado
+- [x] Setup NestJS backend
+- [x] Configurar arquitectura limpia (SRP/DRY)
+- [x] Crear servicio ComparisonService
+- [x] Crear endpoint GET /api/compare
+- [x] Integrar Recharts para gráficos
+- [x] Gráfico de tiempos de vuelta (línea)
+- [x] Gráfico de sectores (barras)
+- [x] Selector de pilotos
+- [x] Vista de comparación lado a lado
 
 **Criterios de aceptación**:
 
-- [ ] Seleccionar 2 pilotos de cualquier sesión
-- [ ] Gráfico de líneas con evolución de vueltas
-- [ ] Colores distintivos por equipo
-- [ ] Hover muestra datos exactos
+- [x] Seleccionar 2 pilotos de cualquier sesión
+- [x] Gráfico de líneas con evolución de vueltas
+- [x] Colores distintivos por equipo
+- [x] Hover muestra datos exactos
 
 ---
 
@@ -219,19 +219,19 @@
 
 ## 📊 Métricas de Progreso
 
-| Iteración        | Puntos | Estado         | Progreso |
-| ---------------- | ------ | -------------- | -------- |
-| 1 - Grid Equipos | 3 → 0  | ✅ COMPLETADA  | 100%     |
-| 2 - Calendario   | 3 → 0  | ✅ COMPLETADA  | 100%     |
-| 3 - Resultados   | 8 → 0  | ✅ COMPLETADA  | 100%     |
-| 4 - Comparador   | 15     | ⏳ En Progreso | 60%      |
-| 5 - IA           | 21     | ⏳ Pendiente   | 0%       |
-| 6 - Chat         | 26     | ⏳ Pendiente   | 0%       |
-| 7 - Polish       | 16     | ⏳ Pendiente   | 0%       |
-| **Total**        | **92** |                | **37%**  |
+| Iteración        | Puntos | Estado        | Progreso |
+| ---------------- | ------ | ------------- | -------- |
+| 1 - Grid Equipos | 3 → 0  | ✅ COMPLETADA | 100%     |
+| 2 - Calendario   | 3 → 0  | ✅ COMPLETADA | 100%     |
+| 3 - Resultados   | 8 → 0  | ✅ COMPLETADA | 100%     |
+| 4 - Comparador   | 15 → 0 | ✅ COMPLETADA | 100%     |
+| 5 - IA           | 21     | ⏳ Pendiente  | 0%       |
+| 6 - Chat         | 26     | ⏳ Pendiente  | 0%       |
+| 7 - Polish       | 16     | ⏳ Pendiente  | 0%       |
+| **Total**        | **92** |               | **52%**  |
 
-**Progreso General: 34/92 puntos (37%)**
-**Estado Actual: MVP casi listo - Iteración 4 en desarrollo**
+**Progreso General: 48/92 puntos (52%)**
+**Estado Actual: MVP listo - Iteración 5 próxima**
 
 ---
 
@@ -280,31 +280,31 @@
 
 ## 🎯 Objetivos del Sprint Actual
 
-**Sprint**: Iteración 4 - Comparador Visual
+**Sprint**: Iteración 5 - IA - Análisis y Predicciones
 **Fecha inicio**: Por definir
 **Fecha fin**: Por definir
-**Story Points**: 15
+**Story Points**: 21
 
 ### Daily Goals
 
-- [ ] Día 1: Setup NestJS backend y arquitectura limpia
-- [ ] Día 2: Crear ComparisonService y endpoint GET /api/compare
-- [ ] Día 3: Integrar Recharts y crear gráficos de comparación
+- [ ] Día 1: Configurar cliente NVIDIA API y crear servicio AIService
+- [ ] Día 2: Implementar agente Performance Engineer y endpoint POST /api/ai/analyze
+- [ ] Día 3: Crear cache de análisis en Redis y pruebas de streaming
 
 ---
 
 ## 📌 Notas
 
-- **Progreso Actual**: 37% completado (34/92 puntos)
-- **MVP Status**: Casi listo - Grid, Calendario y Resultados completos
-- **Próxima Prioridad**: Iteración 4 (Comparador Visual) - 60% en progreso
+- **Progreso Actual**: 52% completado (48/92 puntos)
+- **MVP Status**: COMPLETO - Grid, Calendario, Resultados y Comparador listos
+- **Próxima Prioridad**: Iteración 5 (IA - Análisis y Predicciones)
 - Las estimaciones son aproximadas y pueden ajustarse
 - Prioridad: resultado visual desde el día 1
 - Cada iteración debe tener un entregable funcional
 - Documentación se actualiza en paralelo al código
-- **Nuevos Componentes Implementados**: ResultsTable, SessionCard, GrandPrixSection, formatters, Results page con ruteo dinámico
+- **Nuevos Componentes Implementados**: ResultsTable, SessionCard, GrandPrixSection, formatters, Results page con ruteo dinámico, ComparisonLayout, LapTimeChart, TrackMapAdvantage
 
 ---
 
 **Última actualización**: 2026-06-03
-**Próxima revisión**: Al completar Iteración 4
+**Próxima revisión**: Al completar Iteración 5

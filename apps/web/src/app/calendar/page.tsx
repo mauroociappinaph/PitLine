@@ -126,27 +126,27 @@ export default async function CalendarPage() {
   });
 
   return (
-    <div className="flex flex-col gap-20 py-20 px-6 max-w-7xl mx-auto f1-grid-bg">
-      <header className="flex flex-col gap-8">
-        <div className="flex flex-col gap-2 border-l-8 border-primary pl-8">
+    <div className="flex flex-col gap-24 pb-20 px-6 max-w-7xl mx-auto f1-grid-bg">
+      <header className="flex flex-col gap-6 py-20 relative">
+        <div className="absolute top-20 right-0 w-1/4 h-2/3 bg-primary/10 blur-[100px] pointer-events-none rounded-full" />
+
+        <div className="flex flex-col gap-4 relative">
           <div className="flex items-center gap-3">
             <div className="live-pulse" />
-            <span className="text-xs font-black text-primary uppercase tracking-[0.4em] italic">
-              Network Schedule
+            <span className="text-[10px] font-black uppercase tracking-[0.6em] text-primary italic">
+              Event Protocol
             </span>
           </div>
-          <h1 className="text-7xl md:text-9xl font-black tracking-tighter text-white uppercase italic leading-[0.8] mb-4">
-            Season <span className="text-primary">2026</span>
+          <h1 className="text-7xl md:text-9xl font-black tracking-[-0.05em] text-white uppercase italic leading-[0.8]">
+            Schedule <span className="text-white/10">2026</span>
           </h1>
-          <p className="text-text-secondary text-xl max-w-2xl font-medium uppercase italic tracking-tight leading-relaxed">
-            The complete 2026 racing protocol. Official sessions, validated results, and real-time
-            Grand Prix scheduling.
+          <p className="text-white/60 text-xl max-w-2xl font-medium tracking-tight leading-relaxed uppercase italic">
+            Official racing schedule verified via OpenF1 network uplink.
           </p>
         </div>
-        <div className="f1-divider" />
       </header>
 
-      <div className="flex flex-col gap-24">
+      <div className="flex flex-col gap-32">
         {allEvents.map(({ gp, sessions: sessionsForGp, matchedLocation }) => {
           const hasData = sessionsForGp.length > 0;
 
@@ -167,43 +167,41 @@ export default async function CalendarPage() {
             : 'https://flagcdn.com/w160/un.png';
 
           return (
-            <section
-              key={gp.name}
-              className="opacity-20 grayscale hover:opacity-100 hover:grayscale-0 transition-all duration-700 group"
-            >
-              <div className="flex flex-col md:flex-row md:items-center gap-10">
-                <div className="w-40 h-24 relative skew-x-[-15deg] overflow-hidden border border-white/10">
+            <section key={gp.name} className="group cursor-default">
+              <div className="flex flex-col md:flex-row md:items-center gap-10 opacity-20 hover:opacity-100 transition-all duration-700">
+                <div className="w-32 h-20 relative rounded-lg overflow-hidden border border-white/5 bg-white/[0.02] shadow-2xl">
                   <img
                     src={flagUrl}
                     alt={gp.name}
-                    className="w-full h-full object-cover grayscale opacity-50 group-hover:opacity-100 group-hover:grayscale-0 transition-all"
+                    className="w-full h-full object-cover grayscale opacity-50 group-hover:grayscale-0 group-hover:opacity-100 transition-all duration-700"
                   />
+                  <div className="absolute inset-0 bg-black/40" />
                 </div>
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-1">
                   <h2 className="text-4xl font-black text-white italic uppercase tracking-tighter">
                     {gp.name}
                   </h2>
-                  <span className="text-[10px] font-black text-muted uppercase tracking-[0.3em] font-mono mt-1">
-                    {gp.circuit}
-                  </span>
-                </div>
-                <div className="md:ml-auto">
-                  <div className="px-6 py-2 border border-white/10 rounded-sm italic uppercase text-[10px] font-black text-muted tracking-widest">
-                    Awaiting Event
+                  <div className="flex items-center gap-2">
+                    <span className="text-[10px] font-black text-white/20 uppercase tracking-[0.3em]">
+                      {gp.circuit}
+                    </span>
+                    <span className="w-1 h-1 rounded-full bg-white/10" />
+                    <span className="text-[9px] font-black text-primary/40 uppercase italic tracking-widest">
+                      Pending Sync
+                    </span>
                   </div>
                 </div>
               </div>
-              <div className="f1-divider opacity-20 mt-10" />
+              <div className="h-px bg-white/[0.02] mt-10" />
             </section>
           );
         })}
       </div>
 
-      <footer className="mt-40 p-16 border-t border-white/5 text-center flex flex-col items-center gap-4">
-        <div className="live-pulse !bg-white/10" />
-        <p className="text-muted text-[11px] font-black uppercase tracking-[0.5em] italic">
-          PitLine Systems • Global Racing Federation 2026
-        </p>
+      <footer className="mt-40 p-16 border-t border-white/5 opacity-30 text-center">
+        <span className="text-[9px] font-black italic uppercase tracking-[0.8em] text-white/50">
+          End of Protocol
+        </span>
       </footer>
     </div>
   );

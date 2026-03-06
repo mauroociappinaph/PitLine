@@ -271,6 +271,7 @@ api/src/
 ### Ejemplos
 
 #### Component Barrel
+
 ```typescript
 // components/team/index.ts
 export { TeamCard } from './TeamCard';
@@ -280,6 +281,7 @@ export type { Team, TeamCardProps, TeamGridProps } from './types';
 ```
 
 #### Hooks Barrel
+
 ```typescript
 // hooks/index.ts
 export { useDrivers } from './useDrivers';
@@ -291,6 +293,7 @@ export type { UseDriversReturn, UseSessionsReturn } from './types';
 ```
 
 #### Utils Barrel
+
 ```typescript
 // lib/utils/index.ts
 export { formatLapTime, formatSectorTime } from './formatters';
@@ -345,29 +348,29 @@ UI Components → Hooks → Services → Utils
 
 ```typescript
 // Componentes: PascalCase + descriptivo
-TeamCard.tsx
-DriverAvatar.tsx
-LapTimeChart.tsx
+TeamCard.tsx;
+DriverAvatar.tsx;
+LapTimeChart.tsx;
 
 // Hooks: camelCase + use
-useDrivers.ts
-useSessions.ts
-useComparison.ts
+useDrivers.ts;
+useSessions.ts;
+useComparison.ts;
 
 // Servicios: camelCase
-f1Client.ts
-nvidiaClient.ts
-supabaseClient.ts
+f1Client.ts;
+nvidiaClient.ts;
+supabaseClient.ts;
 
 // Utils: camelCase + verbo
-formatLapTime.ts
-calculateDelta.ts
-validateSessionKey.ts
+formatLapTime.ts;
+calculateDelta.ts;
+validateSessionKey.ts;
 
 // Tipos: PascalCase
-Driver.ts
-Session.ts
-LapData.ts
+Driver.ts;
+Session.ts;
+LapData.ts;
 ```
 
 ### 4. Props Máximo 5
@@ -401,19 +404,19 @@ interface TeamCardProps {
 
 ### Reglas
 
-| Tipo de archivo | Máximo líneas | Cuándo dividir |
-|----------------|---------------|----------------|
-| Componentes React | 100 | > 100 líneas → extraer sub-componentes |
-| Hooks | 80 | > 80 líneas → extraer lógica a utils |
-| Servicios | 150 | > 150 líneas → separar responsabilidades |
-| Utils | 50 | > 50 líneas → dividir por funcionalidad |
-| Tests | 200 | > 200 líneas → dividir por casos de uso |
-| Controllers | 150 | > 150 líneas → extraer servicios |
-| Entities | 100 | > 100 líneas → extraer value objects |
+| Tipo de archivo   | Máximo líneas | Cuándo dividir                           |
+| ----------------- | ------------- | ---------------------------------------- |
+| Componentes React | 100           | > 100 líneas → extraer sub-componentes   |
+| Hooks             | 80            | > 80 líneas → extraer lógica a utils     |
+| Servicios         | 150           | > 150 líneas → separar responsabilidades |
+| Utils             | 50            | > 50 líneas → dividir por funcionalidad  |
+| Tests             | 200           | > 200 líneas → dividir por casos de uso  |
+| Controllers       | 150           | > 150 líneas → extraer servicios         |
+| Entities          | 100           | > 100 líneas → extraer value objects     |
 
 ### Ejemplo: Dividir Componente Grande
 
-```typescript
+````typescript
 // ❌ DriverProfile.tsx (250 líneas)
 function DriverProfile({ driver }) {
   // ... mucho código
@@ -425,6 +428,7 @@ function DriverProfile({ driver }) {
 **Documentación relacionada:**
 - [SPEC.md](./SPEC.md) - Especificación técnica
 - [ARCHITECTURE.md](./ARCHITECTURE.md) - Arquitectura del proyecto
+- [PERFORMANCE_OPTIMIZATION_PLAN.md](./PERFORMANCE_OPTIMIZATION_PLAN.md) - Plan de optimización de performance
 
 ### 4️⃣### __Carpeta /utils - ¿Buena práctica?__
 
@@ -446,4 +450,4 @@ lib/
 │   │   ├── input-validator.ts
 │   │   └── index.ts
 │   └── index.ts             # Barrel file
-```
+````
