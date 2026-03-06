@@ -1,0 +1,17 @@
+ #!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# Run lint-staged
+pnpm lint-staged
+
+# Run type check
+echo "🔍 Running type check..."
+pnpm type-check
+
+# Run tests related to changed files
+echo "🧪 Running tests..."
+pnpm test:ci
+
+echo "✅ Pre-commit checks passed!"
