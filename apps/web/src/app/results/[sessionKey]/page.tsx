@@ -6,8 +6,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
   const { sessionKey } = await params;
 
   // Parallel fetch for speed - use backend API for results
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
   const [sessionResults, sessionDrivers, allDrivers, allSessions] = await Promise.all([
-    fetch(`http://localhost:3001/results/${sessionKey}`).then((res: Response) => res.json()),
+    fetch(`${baseUrl}/results/${sessionKey}`).then((res: Response) => res.json()),
     getDrivers(sessionKey),
     getDrivers(), // All latest drivers as fallback
     getSessions(2026),
