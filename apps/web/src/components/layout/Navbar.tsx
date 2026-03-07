@@ -9,8 +9,6 @@ export function Navbar() {
   const navItems = [
     { label: 'Network', href: '/' },
     { label: 'Schedule', href: '/calendar' },
-    { label: 'Personnel', href: '#' },
-    { label: 'Telemetry', href: '#' },
   ];
 
   return (
