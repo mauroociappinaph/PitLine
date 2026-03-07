@@ -150,6 +150,51 @@ export class AiService {
     }
   }
 
+  async predictQualifyingStream(sessionResults: any[], sessionInfo: any) {
+    const systemPrompt = AGENT_PROMPTS.strategy;
+    const userPrompt = `
+Basado en los resultados de la sesión de prácticas actual para el Gran Premio de ${sessionInfo.location} (${sessionInfo.sessionName}), realiza una predicción para la sesión de Clasificación (Qualifying).
+
+### Datos de la Sesión de Prácticas:
+${JSON.stringify(sessionResults, null, 2)}
+
+### Instrucciones para la Predicción:
+1. Analiza los tiempos de vuelta más rápidos y la consistencia (vueltas completadas).
+2. Predice el Top 5 para la clasificación.
+3. Asigna un porcentaje de confianza a tu predicción general.
+4. Explica brevemente (máximo 5 oraciones) los factores clave (ej. evolución de pista, gestión de neumáticos).
+5. Mantén el tono de "Strategy Analyst": analítico, basado en datos y objetivo.
+6. Habla en español nativo con terminología técnica de F1.
+`;
+
+    try {
+      const stream = (await this.openai.chat.completions.create({
+        model: 'z-ai/glm5',
+        messages: [
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt },
+        ],
+        temperature: 0.7,
+        top_p: 1,
+        max_tokens: 16384,
+        stream: true,
+        extra_body: {
+          chat_template_kwargs: {
+            enable_thinking: true,
+            clear_thinking: false,
+          },
+        },
+      } as any)) as unknown as import('openai/streaming').Stream<
+        import('openai/resources/chat/completions').ChatCompletionChunk
+      >;
+
+      return stream;
+    } catch (error) {
+      this.logger.error('Failed to get Prediction stream', error);
+      throw error;
+    }
+  }
+
   async chatWithAgentStream(
     agentType: AgentType,
     messages: { role: 'user' | 'assistant' | 'system'; content: string }[],

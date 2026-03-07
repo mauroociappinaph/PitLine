@@ -2,13 +2,85 @@ import { Controller, Post, Body, Res } from '@nestjs/common';
 import type { Response } from 'express';
 import { AiService } from './ai.service';
 import { ComparisonService } from '../comparison/comparison.service';
+import { ResultsService } from '../results/results.service';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Controller('ai')
 export class AiController {
   constructor(
     private readonly aiService: AiService,
     private readonly comparisonService: ComparisonService,
+    private readonly resultsService: ResultsService,
+    private readonly prisma: PrismaService,
   ) {}
+
+  @Post('predict-qualy')
+  async predictQualy(
+    @Body('sessionKey') sessionKeyStr: string | number,
+    @Res() res: Response,
+  ) {
+    const sessionKey = Number(sessionKeyStr);
+
+    res.setHeader('Content-Type', 'text/event-stream');
+    res.setHeader('Cache-Control', 'no-cache');
+    res.setHeader('Connection', 'keep-alive');
+
+    try {
+      // 1. Get session info
+      const session = await this.prisma.session.findUnique({
+        where: { sessionKey },
+      });
+
+      if (!session) {
+        throw new Error('Session metadata not found in database');
+      }
+
+      // 2. Get results for the practice session
+      const results = await this.resultsService.getResults(sessionKey);
+
+      // 3. Start prediction stream
+      const stream = await this.aiService.predictQualifyingStream(
+        results,
+        session,
+      );
+
+      for await (const chunk of stream) {
+        if (
+          !chunk.choices ||
+          chunk.choices.length === 0 ||
+          !chunk.choices[0].delta
+        ) {
+          continue;
+        }
+
+        const delta = chunk.choices[0].delta;
+        const content = delta.content || '';
+        const reasoning = (delta as any).reasoning_content || '';
+
+        if (reasoning) {
+          const formattedReasoning = `<span style="color: #666; font-style: italic;">${reasoning}</span>`;
+          res.write(
+            `data: ${JSON.stringify({ content: formattedReasoning })}\n\n`,
+          );
+        }
+
+        if (content) {
+          res.write(`data: ${JSON.stringify({ content })}\n\n`);
+        }
+      }
+
+      res.write('data: [DONE]\n\n');
+      res.end();
+    } catch (error: any) {
+      console.error('AI Prediction Error:', error);
+      res.write(
+        `data: ${JSON.stringify({
+          error: error.message || 'AI Prediction failed',
+        })}\n\n`,
+      );
+      res.end();
+    }
+  }
 
   @Post('analyze')
   async analyzeComparison(

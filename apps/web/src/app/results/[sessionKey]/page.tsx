@@ -1,5 +1,6 @@
 import { getResults, getDrivers, getSessions } from '@/lib/api/openf1';
 import { ResultsTable } from '@/components/results/ResultsTable';
+import { QualyPredictionCard } from '@/components/results/QualyPredictionCard';
 
 export default async function ResultsPage({ params }: { params: Promise<{ sessionKey: string }> }) {
   const { sessionKey } = await params;
@@ -121,6 +122,9 @@ export default async function ResultsPage({ params }: { params: Promise<{ sessio
       </header>
 
       <section className="animate-in fade-in duration-1000">
+        {currentSession?.sessionType?.toLowerCase().includes('practice') && (
+          <QualyPredictionCard sessionKey={Number(sessionKey)} />
+        )}
         <ResultsTable results={enrichedResults} />
       </section>
 

@@ -3,9 +3,10 @@ import { AiService } from './ai.service';
 import { AiController } from './ai.controller';
 import { ConfigModule } from '@nestjs/config';
 import { ComparisonModule } from '../comparison/comparison.module';
+import { ResultsModule } from '../results/results.module';
 
 @Module({
-  imports: [ConfigModule, ComparisonModule],
+  imports: [ConfigModule, ComparisonModule, ResultsModule],
   providers: [AiService],
   controllers: [AiController],
 })
