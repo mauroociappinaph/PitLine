@@ -185,12 +185,28 @@ export class AiController {
     res.setHeader('Connection', 'keep-alive');
 
     try {
+      const userMessage = messages[messages.length - 1];
+      const sessionKey = context?.sessionKey
+        ? Number(context.sessionKey)
+        : undefined;
+
+      // 1. Save user message immediately
+      await this.aiService.saveChatMessage({
+        role: 'user',
+        content: userMessage.content,
+        agentType,
+        sessionKey,
+      });
+
       const stream = await this.aiService.chatWithAgentStream(
         agentType,
         messages || [],
         isSimpleMode || false,
         context,
       );
+
+      let fullContent = '';
+      let fullReasoning = '';
 
       for await (const chunk of stream) {
         if (
@@ -206,6 +222,7 @@ export class AiController {
         const reasoning = (delta as any).reasoning_content || '';
 
         if (reasoning) {
+          fullReasoning += reasoning;
           const formattedReasoning = `<span style="color: #666; font-style: italic;">${reasoning}</span>`;
           res.write(
             `data: ${JSON.stringify({ content: formattedReasoning })}\n\n`,
@@ -213,8 +230,20 @@ export class AiController {
         }
 
         if (content) {
+          fullContent += content;
           res.write(`data: ${JSON.stringify({ content })}\n\n`);
         }
+      }
+
+      // 2. Save assistant message after stream ends
+      if (fullContent) {
+        await this.aiService.saveChatMessage({
+          role: 'assistant',
+          content: fullContent,
+          reasoning: fullReasoning || undefined,
+          agentType,
+          sessionKey,
+        });
       }
 
       res.write('data: [DONE]\n\n');
@@ -226,5 +255,19 @@ export class AiController {
       );
       res.end();
     }
+  }
+
+  @Post('history')
+  async getHistory(
+    @Body('agentType') agentType: string,
+    @Body('sessionKey') sessionKey: string | number,
+  ) {
+    const sKey = sessionKey ? Number(sessionKey) : undefined;
+    const history = await this.aiService.getChatHistory(agentType, sKey);
+    return history.map((m) => ({
+      role: m.role,
+      content: m.content,
+      reasoning: m.reasoning,
+    }));
   }
 }

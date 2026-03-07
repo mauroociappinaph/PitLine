@@ -4,6 +4,7 @@ import OpenAI from 'openai';
 import Redis from 'ioredis';
 import { AgentType } from 'shared-types';
 import { AGENT_PROMPTS, SIMPLE_MODE_APPEND } from './agents.config';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class AiService {
@@ -11,7 +12,10 @@ export class AiService {
   private redis: Redis | null = null;
   private readonly logger = new Logger(AiService.name);
 
-  constructor(private configService: ConfigService) {
+  constructor(
+    private configService: ConfigService,
+    private prisma: PrismaService,
+  ) {
     const nvidiaApiKey = this.configService.get<string>('NVIDIA_API_KEY');
     const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
     const nvidiaBaseUrl = this.configService.get<string>('NVIDIA_BASE_URL');
@@ -238,6 +242,44 @@ ${JSON.stringify(sessionResults, null, 2)}
     } catch (error) {
       this.logger.error('Failed to get Chat stream', error);
       throw error;
+    }
+  }
+
+  async saveChatMessage(data: {
+    role: string;
+    content: string;
+    reasoning?: string;
+    agentType: string;
+    sessionKey?: number;
+  }) {
+    try {
+      return await this.prisma.chatMessage.create({
+        data: {
+          role: data.role,
+          content: data.content,
+          reasoning: data.reasoning,
+          agentType: data.agentType,
+          sessionKey: data.sessionKey,
+        },
+      });
+    } catch (error) {
+      this.logger.error('Failed to save chat message', error);
+    }
+  }
+
+  async getChatHistory(agentType: string, sessionKey?: number) {
+    try {
+      return await this.prisma.chatMessage.findMany({
+        where: {
+          agentType,
+          sessionKey: sessionKey || null,
+        },
+        orderBy: { createdAt: 'asc' },
+        take: 50, // Limit to last 50 messages
+      });
+    } catch (error) {
+      this.logger.error('Failed to fetch chat history', error);
+      return [];
     }
   }
 

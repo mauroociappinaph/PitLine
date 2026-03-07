@@ -106,3 +106,16 @@ model Position {
   @@index([driverNumber])
   @@index([date])
 }
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now())
+  role        String   // 'user' | 'assistant' | 'system'
+  content     String   @db.Text
+  reasoning   String?  @db.Text
+  agentType   String   // 'race', 'tire', etc.
+  sessionKey  Int?     // Optional link to a specific session
+  
+  @@index([sessionKey])
+  @@index([createdAt])
+}

@@ -24,10 +24,12 @@ function ChatInterfaceInner() {
     },
   ]);
   const [isStreaming, setIsStreaming] = useState(false);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const sessionKey = searchParams.get('sessionKey');
 
   const activeAgentDef = AGENTS.find(a => a.id === selectedAgent);
 
@@ -38,6 +40,43 @@ function ChatInterfaceInner() {
   useEffect(() => {
     scrollToBottom();
   }, [messages, isStreaming]);
+
+  // Load History
+  useEffect(() => {
+    const fetchHistory = async () => {
+      setIsLoadingHistory(true);
+      try {
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+        const response = await fetch(`${baseUrl}/ai/history`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            agentType: selectedAgent,
+            sessionKey: sessionKey ? Number(sessionKey) : null,
+          }),
+        });
+        if (response.ok) {
+          const history = await response.json();
+          if (history.length > 0) {
+            setMessages(history);
+          } else {
+            setMessages([
+              {
+                role: 'assistant',
+                content: `Pit wall online (${activeAgentDef?.name}). ¿En qué te ayudo jefe?`,
+              },
+            ]);
+          }
+        }
+      } catch (e) {
+        console.error('Failed to fetch history', e);
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+
+    fetchHistory();
+  }, [selectedAgent, sessionKey]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
