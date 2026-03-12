@@ -29,6 +29,23 @@ import {
   formatDuration,
 } from '../shared/utils';
 
+// Definir tipos para Jest
+declare global {
+  interface JestMatchers<R> {
+    toBe(expected: any): R;
+    toEqual(expected: any): R;
+    toBeGreaterThan(expected: number): R;
+    toBeGreaterThanOrEqual(expected: number): R;
+    toBeUndefined(): R;
+    toMatch(pattern: RegExp): R;
+    not: JestMatchers<R>;
+  }
+
+  interface JestExpect {
+    (actual: any): JestMatchers<any>;
+  }
+}
+
 describe('Utils', () => {
   describe('generateId', () => {
     it('debería generar un ID único', () => {
@@ -148,7 +165,7 @@ describe('Utils', () => {
 
   describe('setNestedValue', () => {
     it('debería establecer valores anidados', () => {
-      const obj = { a: {} };
+      const obj: any = { a: {} };
       setNestedValue(obj, 'a.b.c', 5);
       expect(obj.a.b.c).toBe(5);
     });
