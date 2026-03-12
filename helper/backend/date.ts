@@ -42,11 +42,60 @@ try {
   };
   parseISOFn = dateFns.parseISO;
   isValidFn = dateFns.isValid;
+
+  // Use date-fns functions if available
+  addHoursFn = dateFns.addHours;
+  subHoursFn = dateFns.subHours;
+  startOfDayFn = dateFns.startOfDay;
+  endOfDayFn = dateFns.endOfDay;
+  isAfterFn = dateFns.isAfter;
+  isBeforeFn = dateFns.isBefore;
 } catch {
   // Use fallbacks
 }
 
-import { addHours, subHours, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
+/**
+ * Fallback implementations for date-fns functions
+ */
+const fallbackAddHours = (date: Date, hours: number): Date => {
+  const result = new Date(date);
+  result.setHours(result.getHours() + hours);
+  return result;
+};
+
+const fallbackSubHours = (date: Date, hours: number): Date => {
+  const result = new Date(date);
+  result.setHours(result.getHours() - hours);
+  return result;
+};
+
+const fallbackStartOfDay = (date: Date): Date => {
+  const result = new Date(date);
+  result.setHours(0, 0, 0, 0);
+  return result;
+};
+
+const fallbackEndOfDay = (date: Date): Date => {
+  const result = new Date(date);
+  result.setHours(23, 59, 59, 999);
+  return result;
+};
+
+const fallbackIsAfter = (date1: Date, date2: Date): boolean => {
+  return date1.getTime() > date2.getTime();
+};
+
+const fallbackIsBefore = (date1: Date, date2: Date): boolean => {
+  return date1.getTime() < date2.getTime();
+};
+
+// Initialize with fallbacks
+let addHoursFn: (date: Date, hours: number) => Date = fallbackAddHours;
+let subHoursFn: (date: Date, hours: number) => Date = fallbackSubHours;
+let startOfDayFn: (date: Date) => Date = fallbackStartOfDay;
+let endOfDayFn: (date: Date) => Date = fallbackEndOfDay;
+let isAfterFn: (date1: Date, date2: Date) => boolean = fallbackIsAfter;
+let isBeforeFn: (date1: Date, date2: Date) => boolean = fallbackIsBefore;
 
 /**
  * Formatea una fecha en el formato deseado
@@ -79,7 +128,7 @@ export function parseISODate(dateString: string): Date {
  */
 export function getStartOfDay(date: Date | string): Date {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return startOfDay(dateObj);
+  return startOfDayFn(dateObj);
 }
 
 /**
@@ -87,7 +136,7 @@ export function getStartOfDay(date: Date | string): Date {
  */
 export function getEndOfDay(date: Date | string): Date {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return endOfDay(dateObj);
+  return endOfDayFn(dateObj);
 }
 
 /**
@@ -95,7 +144,7 @@ export function getEndOfDay(date: Date | string): Date {
  */
 export function addHoursToDate(date: Date | string, hours: number): Date {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return addHours(dateObj, hours);
+  return addHoursFn(dateObj, hours);
 }
 
 /**
@@ -103,7 +152,7 @@ export function addHoursToDate(date: Date | string, hours: number): Date {
  */
 export function subHoursFromDate(date: Date | string, hours: number): Date {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return subHours(dateObj, hours);
+  return subHoursFn(dateObj, hours);
 }
 
 /**
@@ -118,7 +167,7 @@ export function isDateInRange(
   const startObj = typeof start === 'string' ? parseISODate(start) : start;
   const endObj = typeof end === 'string' ? parseISODate(end) : end;
 
-  return isAfter(dateObj, startObj) && isBefore(dateObj, endObj);
+  return isAfterFn(dateObj, startObj) && isBeforeFn(dateObj, endObj);
 }
 
 /**
