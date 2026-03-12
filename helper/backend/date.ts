@@ -2,39 +2,72 @@
  * Funciones de utilidad para manipulación de fechas
  */
 
-import {
-  format,
-  parseISO,
-  isValid,
-  addHours,
-  subHours,
-  startOfDay,
-  endOfDay,
-  isAfter,
-  isBefore,
-} from 'date-fns';
-import { es } from 'date-fns/locale';
+// Fallback date formatting functions if date-fns is not available
+const fallbackFormat = (date: Date, pattern: string): string => {
+  // Simple fallback for common patterns
+  if (pattern === 'dd/MM/yyyy') {
+    return date.toLocaleDateString('es-ES');
+  }
+  if (pattern === 'dd/MM/yyyy HH:mm') {
+    return date.toLocaleString('es-ES');
+  }
+  return date.toISOString();
+};
+
+const fallbackParseISO = (dateString: string): Date => {
+  return new Date(dateString);
+};
+
+const fallbackIsValid = (date: Date): boolean => {
+  return date instanceof Date && !isNaN(date.getTime());
+};
+
+// Use date-fns if available, otherwise use fallbacks
+let formatFn = fallbackFormat;
+let parseISOFn = fallbackParseISO;
+let isValidFn = fallbackIsValid;
+
+try {
+  // Dynamic import to handle missing dependencies gracefully
+  const dateFns = eval('require("date-fns")');
+
+  formatFn = (date: Date, pattern: string) => {
+    if (pattern === 'dd/MM/yyyy') {
+      return date.toLocaleDateString('es-ES');
+    }
+    if (pattern === 'dd/MM/yyyy HH:mm') {
+      return date.toLocaleString('es-ES');
+    }
+    return date.toISOString();
+  };
+  parseISOFn = dateFns.parseISO;
+  isValidFn = dateFns.isValid;
+} catch {
+  // Use fallbacks
+}
+
+import { addHours, subHours, startOfDay, endOfDay, isAfter, isBefore } from 'date-fns';
 
 /**
  * Formatea una fecha en el formato deseado
  */
 export function formatDate(date: Date | string, pattern: string = 'dd/MM/yyyy HH:mm'): string {
-  const dateObj = typeof date === 'string' ? parseISO(date) : date;
+  const dateObj = typeof date === 'string' ? parseISOFn(date) : date;
 
-  if (!isValid(dateObj)) {
+  if (!isValidFn(dateObj)) {
     throw new Error('Fecha inválida');
   }
 
-  return format(dateObj, pattern, { locale: es });
+  return formatFn(dateObj, pattern);
 }
 
 /**
  * Convierte una cadena ISO a objeto Date
  */
 export function parseISODate(dateString: string): Date {
-  const date = parseISO(dateString);
+  const date = parseISOFn(dateString);
 
-  if (!isValid(date)) {
+  if (!isValidFn(date)) {
     throw new Error(`Fecha ISO inválida: ${dateString}`);
   }
 
@@ -168,7 +201,7 @@ export function isTomorrow(date: Date | string): boolean {
  */
 export function getDayName(date: Date | string): string {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return format(dateObj, 'EEEE', { locale: es });
+  return formatFn(dateObj, 'EEEE');
 }
 
 /**
@@ -176,7 +209,7 @@ export function getDayName(date: Date | string): string {
  */
 export function getMonthName(date: Date | string): string {
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return format(dateObj, 'MMMM', { locale: es });
+  return formatFn(dateObj, 'MMMM');
 }
 
 /**
@@ -186,7 +219,7 @@ export function isValidDate(date: any): boolean {
   if (!date) return false;
 
   const dateObj = typeof date === 'string' ? parseISODate(date) : date;
-  return isValid(dateObj);
+  return isValidFn(dateObj);
 }
 
 /**
