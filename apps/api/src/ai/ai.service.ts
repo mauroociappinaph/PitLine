@@ -2,9 +2,18 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import OpenAI from 'openai';
 import Redis from 'ioredis';
-import { AgentType } from 'shared-types';
+import type { AgentType } from 'shared-types';
 import { AGENT_PROMPTS, SIMPLE_MODE_APPEND } from './agents.config';
 import { PrismaService } from '../prisma/prisma.service';
+import { DriversService } from '../drivers/drivers.service';
+import { SessionsSyncService } from '../sessions/sessions-sync.service';
+import { ResultsService } from '../results/results.service';
+
+interface AiContext {
+  sessions: any[];
+  results: any[];
+  drivers: any[];
+}
 
 @Injectable()
 export class AiService {
@@ -15,6 +24,9 @@ export class AiService {
   constructor(
     private configService: ConfigService,
     private prisma: PrismaService,
+    private driversService: DriversService,
+    private sessionsService: SessionsSyncService,
+    private resultsService: ResultsService,
   ) {
     const nvidiaApiKey = this.configService.get<string>('NVIDIA_API_KEY');
     const openaiApiKey = this.configService.get<string>('OPENAI_API_KEY');
@@ -253,15 +265,10 @@ ${JSON.stringify(sessionResults, null, 2)}
     sessionKey?: number;
   }) {
     try {
-      return await this.prisma.chatMessage.create({
-        data: {
-          role: data.role,
-          content: data.content,
-          reasoning: data.reasoning,
-          agentType: data.agentType,
-          sessionKey: data.sessionKey,
-        },
-      });
+      return await this.prisma.$executeRaw`
+        INSERT INTO "ChatMessage" ("role", "content", "reasoning", "agentType", "sessionKey", "createdAt")
+        VALUES (${data.role}, ${data.content}, ${data.reasoning}, ${data.agentType}, ${data.sessionKey}, NOW())
+      `;
     } catch (error) {
       this.logger.error('Failed to save chat message', error);
     }
@@ -269,14 +276,14 @@ ${JSON.stringify(sessionResults, null, 2)}
 
   async getChatHistory(agentType: string, sessionKey?: number) {
     try {
-      return await this.prisma.chatMessage.findMany({
-        where: {
-          agentType,
-          sessionKey: sessionKey || null,
-        },
-        orderBy: { createdAt: 'asc' },
-        take: 50, // Limit to last 50 messages
-      });
+      return await this.prisma.$queryRaw`
+        SELECT "role", "content", "reasoning"
+        FROM "ChatMessage"
+        WHERE "agentType" = ${agentType}
+        AND "sessionKey" = ${sessionKey || null}
+        ORDER BY "createdAt" ASC
+        LIMIT 50
+      `;
     } catch (error) {
       this.logger.error('Failed to fetch chat history', error);
       return [];
@@ -308,5 +315,24 @@ Basado EXCLUSIVAMENTE en estos datos (no inventes), actúa como un ingeniero de 
 3. Menciona qué zonas del circuito le favorecen a cada uno.
 4. Usa un tono analítico, frío y objetivo, acorde al estándar "Dark Glassmorphism 2026" de la aplicación PitLine.
 `;
+  }
+
+  async getAiContext(): Promise<AiContext> {
+    try {
+      const [sessions, results, drivers] = await Promise.all([
+        this.prisma.session.findMany(),
+        this.resultsService.getResults(0),
+        this.driversService.getDrivers(),
+      ]);
+
+      return {
+        sessions,
+        results,
+        drivers,
+      };
+    } catch (error) {
+      console.error('Error getting AI context:', error);
+      throw new Error('Failed to get AI context');
+    }
   }
 }

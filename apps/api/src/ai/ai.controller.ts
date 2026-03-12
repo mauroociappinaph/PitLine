@@ -4,6 +4,7 @@ import { AiService } from './ai.service';
 import { ComparisonService } from '../comparison/comparison.service';
 import { ResultsService } from '../results/results.service';
 import { PrismaService } from '../prisma/prisma.service';
+import type { AgentType } from './agents.config';
 
 @Controller('ai')
 export class AiController {
@@ -173,11 +174,11 @@ export class AiController {
 
   @Post('chat')
   async chatWithAgent(
-    @Body('agentType') agentType: any,
+    @Body('agentType') agentType: AgentType,
     @Body('messages')
     messages: { role: 'user' | 'assistant' | 'system'; content: string }[],
     @Body('isSimpleMode') isSimpleMode: boolean,
-    @Body('context') context: any,
+    @Body('context') context: Record<string, unknown>,
     @Res() res: Response,
   ) {
     res.setHeader('Content-Type', 'text/event-stream');
@@ -264,7 +265,7 @@ export class AiController {
   ) {
     const sKey = sessionKey ? Number(sessionKey) : undefined;
     const history = await this.aiService.getChatHistory(agentType, sKey);
-    return history.map((m) => ({
+    return (history as any[]).map((m) => ({
       role: m.role,
       content: m.content,
       reasoning: m.reasoning,

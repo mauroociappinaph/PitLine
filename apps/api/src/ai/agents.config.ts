@@ -1,4 +1,6 @@
-import { AgentType } from 'shared-types';
+import type { AgentType } from 'shared-types';
+
+export type { AgentType };
 
 export const AGENT_PROMPTS: Record<AgentType, string> = {
   tire: `Eres un Ingeniero de Neumáticos de Fórmula 1 con 15 años de experiencia en equipos top (Red Bull, Mercedes, Ferrari).
