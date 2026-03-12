@@ -22,38 +22,6 @@ const fallbackIsValid = (date: Date): boolean => {
   return date instanceof Date && !isNaN(date.getTime());
 };
 
-// Use date-fns if available, otherwise use fallbacks
-let formatFn = fallbackFormat;
-let parseISOFn = fallbackParseISO;
-let isValidFn = fallbackIsValid;
-
-try {
-  // Dynamic import to handle missing dependencies gracefully
-  const dateFns = eval('require("date-fns")');
-
-  formatFn = (date: Date, pattern: string) => {
-    if (pattern === 'dd/MM/yyyy') {
-      return date.toLocaleDateString('es-ES');
-    }
-    if (pattern === 'dd/MM/yyyy HH:mm') {
-      return date.toLocaleString('es-ES');
-    }
-    return date.toISOString();
-  };
-  parseISOFn = dateFns.parseISO;
-  isValidFn = dateFns.isValid;
-
-  // Use date-fns functions if available
-  addHoursFn = dateFns.addHours;
-  subHoursFn = dateFns.subHours;
-  startOfDayFn = dateFns.startOfDay;
-  endOfDayFn = dateFns.endOfDay;
-  isAfterFn = dateFns.isAfter;
-  isBeforeFn = dateFns.isBefore;
-} catch {
-  // Use fallbacks
-}
-
 /**
  * Fallback implementations for date-fns functions
  */
@@ -89,6 +57,11 @@ const fallbackIsBefore = (date1: Date, date2: Date): boolean => {
   return date1.getTime() < date2.getTime();
 };
 
+// Use date-fns if available, otherwise use fallbacks
+let formatFn = fallbackFormat;
+let parseISOFn = fallbackParseISO;
+let isValidFn = fallbackIsValid;
+
 // Initialize with fallbacks
 let addHoursFn: (date: Date, hours: number) => Date = fallbackAddHours;
 let subHoursFn: (date: Date, hours: number) => Date = fallbackSubHours;
@@ -96,6 +69,33 @@ let startOfDayFn: (date: Date) => Date = fallbackStartOfDay;
 let endOfDayFn: (date: Date) => Date = fallbackEndOfDay;
 let isAfterFn: (date1: Date, date2: Date) => boolean = fallbackIsAfter;
 let isBeforeFn: (date1: Date, date2: Date) => boolean = fallbackIsBefore;
+
+try {
+  // Dynamic import to handle missing dependencies gracefully
+  const dateFns = eval('require("date-fns")');
+
+  formatFn = (date: Date, pattern: string) => {
+    if (pattern === 'dd/MM/yyyy') {
+      return date.toLocaleDateString('es-ES');
+    }
+    if (pattern === 'dd/MM/yyyy HH:mm') {
+      return date.toLocaleString('es-ES');
+    }
+    return date.toISOString();
+  };
+  parseISOFn = dateFns.parseISO;
+  isValidFn = dateFns.isValid;
+
+  // Use date-fns functions if available
+  addHoursFn = dateFns.addHours;
+  subHoursFn = dateFns.subHours;
+  startOfDayFn = dateFns.startOfDay;
+  endOfDayFn = dateFns.endOfDay;
+  isAfterFn = dateFns.isAfter;
+  isBeforeFn = dateFns.isBefore;
+} catch {
+  // Use fallbacks
+}
 
 /**
  * Formatea una fecha en el formato deseado
